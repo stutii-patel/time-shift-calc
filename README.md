@@ -5,13 +5,13 @@ This project implements an algorithm to optimize the **Simultaneity Factor** in 
 ## Usage
 
 ```bash
-python3 time_shift_optimizer.py [path/to/vicus_file.vicus]
+python3 time_shift_calculations.py [path/to/vicus_file.vicus]
 ```
 If no file is provided, it runs on a synthetic network.
 
 ---
 
-## Code Structure (`time_shift_optimizer.py`)
+## Code Structure (`time_shift_calculations.py`)
 
 The script is a standalone Python implementation requiring no heavy external libraries (only `networkx` for graph parsing).
 
