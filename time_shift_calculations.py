@@ -6,6 +6,7 @@ import sys
 import os
 import networkx as nx
 import xml.etree.ElementTree as ET
+import matplotlib.pyplot as plt
 
 # Import the user's graph creator
 try:
@@ -138,7 +139,7 @@ class Edge:
         
         if self.simultaneity_spline:
             return self.simultaneity_spline.value(self.n_consumers)
-        
+        print("Fallback Formula")
         # Fallback Formula
         a = 0.4497
         b = 0.5512
@@ -151,6 +152,8 @@ class Network:
         self.edges = []
         self.consumer_to_edges = {} 
         self.simultaneity_spline = None
+        self.pos = {}
+        self.G_nx = None # Store full graph for visualization
 
     def add_consumer(self, consumer):
         self.consumers.append(consumer)
@@ -175,10 +178,28 @@ def calculate_local_error(edges):
 
 def run_hill_climbing_optimization(network, relevant_edges, max_iterations=20):
     print(f"Starting Fast Hill Climbing for {len(network.consumers)} consumers...")
-    shifts_to_try = [1, -1, 3, -3, 6, -6, 12, -12] 
+   
+    # Determine data granularity
+    profile_length = len(network.consumers[0].base_profile)
+
+    if profile_length > 1000:  # Annual data (8760 hours)
+        # User requested max_shift < 12 (setting to 12 to be safe/inclusive)
+        max_shift = 12 
+        # Shifts to try: small local adjustments since we are constrained
+        shifts_to_try = [1, -1, 3, -3, 6, -6, 12, -12]
+    else:  # Daily data
+        max_shift = 12  # 12 hours
+        shifts_to_try = [1, -1, 3, -3, 6, -6, 12, -12]
     
+    print(f"Max shift: {max_shift} timesteps, Profile length: {profile_length}")
+
     for iteration in range(max_iterations):
         improved = False
+
+        # Adaptive step sizing: smaller steps in later iterations
+        if iteration > max_iterations * 0.7:
+            shifts_to_try = [s for s in shifts_to_try if abs(s) <= 24]
+        
         indices = list(range(len(network.consumers)))
         random.shuffle(indices)
         
@@ -195,7 +216,7 @@ def run_hill_climbing_optimization(network, relevant_edges, max_iterations=20):
             
             for step in shifts_to_try:
                 new_shift = original_shift + step
-                if abs(new_shift) > 12: continue
+                if abs(new_shift) > max_shift: continue
                 
                 consumer.time_shift = new_shift
                 new_profile = consumer.get_shifted_profile()
@@ -232,14 +253,188 @@ def run_hill_climbing_optimization(network, relevant_edges, max_iterations=20):
             
     return calculate_local_error(relevant_edges)
 
-# --- Graph Import Logic ---
+def visualize_network(net, relevant_edges, output_path, title="Network Simultaneity"):
+    print(f"Generating visualization: {output_path}")
+    
+    # Decide which graph to plot: Full graph if available, else build from relevant edges
+    if net.G_nx:
+        G_vis = net.G_nx
+    else:
+        G_vis = nx.DiGraph()
+        for edge in relevant_edges:
+            try:
+                if "->" in edge.id:
+                    u, v = edge.id.split("->")
+                    G_vis.add_edge(u, v)
+            except ValueError:
+                pass
+    
+    if len(G_vis.nodes()) == 0:
+        print("No edges to visualize.")
+        return
 
-def create_base_profile():
-    base_day = []
-    for h in range(24):
-        val = math.exp(-(h - 12)**2 / (2 * 4)) 
-        base_day.append(val)
-    return base_day * 365
+    # Map relevant edges to their simultaneity
+    edge_obj_map = {e.id: e for e in relevant_edges}
+    
+    # Collect simultaneity values for color mapping
+    sim_values = []
+    for u, v in G_vis.edges():
+        eid = f"{u}->{v}"
+        if eid in edge_obj_map:
+            sim = edge_obj_map[eid].calculate_current_simultaneity()
+            sim_values.append(sim)
+            
+    vmin = min(sim_values) if sim_values else 0.9
+    vmax = max(sim_values) if sim_values else 1.0
+    # Ensure we have a reasonable range
+    if vmax - vmin < 0.01:
+        vmin = vmin - 0.05
+        vmax = vmax + 0.05
+    norm = plt.Normalize(vmin=vmin, vmax=vmax)
+    cmap = plt.cm.coolwarm
+    
+    # Prepare edge colors and widths
+    full_edge_colors = []
+    full_edge_widths = []
+    for u, v in G_vis.edges():
+        eid = f"{u}->{v}"
+        if eid in edge_obj_map:
+            sim = edge_obj_map[eid].calculate_current_simultaneity()
+            full_edge_colors.append(cmap(norm(sim)))
+            full_edge_widths.append(5.0)  # Bolder edges
+        else:
+            full_edge_colors.append((0.5, 0.5, 0.5, 0.9))  # Gray for pipes
+            full_edge_widths.append(3.0)  # Bolder pipes too
+
+    # Setup Positions - Use Kamada-Kawai for better spacing
+    pos = net.pos
+    relevant_pos = {n: pos[n] for n in G_vis.nodes() if n in pos}
+    
+    if len(relevant_pos) < len(G_vis.nodes()) or len(relevant_pos) == 0:
+        # Use Kamada-Kawai layout for better spacing
+        relevant_pos = nx.kamada_kawai_layout(G_vis, scale=2.0)
+    else:
+        # Scale existing positions for better spacing
+        xs = [p[0] for p in relevant_pos.values()]
+        ys = [p[1] for p in relevant_pos.values()]
+        x_range = max(xs) - min(xs) if xs else 1
+        y_range = max(ys) - min(ys) if ys else 1
+        scale_factor = 2.0 / max(x_range, y_range, 1)
+        relevant_pos = {n: (p[0] * scale_factor, p[1] * scale_factor) for n, p in relevant_pos.items()}
+        
+    # Create figure with more space
+    plt.figure(figsize=(16, 12))
+    
+    # Draw edges (no arrows - flow direction is implicit from source)
+    nx.draw_networkx_edges(
+        G_vis, 
+        relevant_pos, 
+        edge_color=full_edge_colors, 
+        width=full_edge_widths,
+        arrows=False,
+        alpha=0.9
+    )
+    
+    # Colorbar
+    if sim_values:
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=plt.gca(), label='Simultaneity Factor', shrink=0.8)
+        cbar.ax.tick_params(labelsize=10)
+
+    # Edge Labels - show ALL edges (including single-consumer edges)
+    edge_labels = {}
+    consumer_map = {str(c.id): c for c in net.consumers}
+    
+    for u, v in G_vis.edges():
+        eid = f"{u}->{v}"
+        if eid in edge_obj_map:
+            # Edge is in relevant_edges (has optimization data)
+            e = edge_obj_map[eid]
+            sim = e.calculate_current_simultaneity()
+            n_cons = e.n_consumers
+            edge_labels[(u, v)] = f"g={sim:.3f}\nn={n_cons}"
+        else:
+            # Check if this edge connects a consumer to a mixer (n=1 case)
+            # u is the consumer node in "consumer->mixer" edges
+            if str(u) in consumer_map:
+                edge_labels[(u, v)] = f"g=1.000\nn=1"
+            
+    nx.draw_networkx_edge_labels(
+        G_vis, relevant_pos, edge_labels=edge_labels, 
+        font_size=8, font_color='darkblue',
+        bbox=dict(boxstyle='round,pad=0.3', facecolor='white', edgecolor='gray', alpha=0.9)
+    )
+
+    # Prepare node properties
+    consumer_map = {str(c.id): c for c in net.consumers}
+    node_labels = {}
+    node_colors = []
+    node_sizes = []
+    
+    for n in G_vis.nodes():
+        n_type = G_vis.nodes[n].get('type', 'Unknown')
+        
+        if n in consumer_map:
+            # Consumer node
+            shift = consumer_map[n].time_shift
+            node_labels[n] = f"{n}\n{int(shift)}h"
+            node_colors.append('#4ECDC4')  # Teal for consumers
+            node_sizes.append(800)
+        elif n_type == 'Source':
+            # Source node - LARGEST
+            node_labels[n] = f"SOURCE\n{n}"
+            node_colors.append('#FF6B6B')  # Red-orange for source
+            node_sizes.append(1500)
+        elif n_type == 'Mixer':
+            # Mixer node - SMALLEST
+            node_labels[n] = f"{n}"
+            node_colors.append('#95A5A6')  # Gray for mixers
+            node_sizes.append(300)
+        else:
+            node_labels[n] = f"{n}"
+            node_colors.append('#BDC3C7')
+            node_sizes.append(400)
+
+    # Draw nodes with variable sizes
+    nx.draw_networkx_nodes(
+        G_vis, relevant_pos, 
+        node_size=node_sizes, 
+        node_color=node_colors,
+        edgecolors='black',
+        linewidths=1.5
+    )
+    
+    # Draw labels
+    nx.draw_networkx_labels(
+        G_vis, relevant_pos, 
+        labels=node_labels, 
+        font_size=8, 
+        font_weight='bold'
+    )
+
+    # Title and legend
+    plt.title(f"{title}\nEdge Labels: g=Simultaneity, n=Downstream Consumers", fontsize=14)
+    
+    # Add legend for node types
+    from matplotlib.lines import Line2D
+    legend_elements = [
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='#FF6B6B', markersize=15, label='Source'),
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='#4ECDC4', markersize=12, label='Consumer (ID + shift)'),
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='#95A5A6', markersize=8, label='Mixer'),
+    ]
+    plt.legend(handles=legend_elements, loc='upper left', fontsize=10)
+    
+    plt.axis('off')
+    plt.tight_layout()
+    
+    try:
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        print("Saved.")
+    except Exception as e:
+        print(f"Error saving plot: {e}")
+    finally:
+        plt.close()
 
 def parse_simultaneity_spline(filepath):
     try:
@@ -279,6 +474,44 @@ def parse_simultaneity_spline(filepath):
         print(f"Error parsing XML for spline: {e}")
         return None
 
+def load_real_profiles(directory):
+    """Load TSV profiles - always hourly resolution."""
+    profiles = []
+    
+    if not os.path.exists(directory):
+        print(f"Directory not found: {directory}")
+        return []
+        
+    for filename in os.listdir(directory):
+        if filename.endswith(".tsv"):
+            filepath = os.path.join(directory, filename)
+            
+            try:
+                vals = []
+                with open(filepath, 'r') as f:
+                    lines = f.readlines()
+                    for line in lines[1:]:  # Skip header
+                        parts = line.split('\t')
+                        if len(parts) >= 2:
+                            try:
+                                val = float(parts[1])
+                                vals.append(val)
+                            except ValueError:
+                                pass
+                
+                if vals:
+                    peak = max(vals) if vals else 1.0
+                    if peak == 0: peak = 1.0
+                    normalized = [v / peak for v in vals]
+                    profiles.append(normalized)
+                    print(f"Loaded: {filename} ({len(normalized)} hourly values)")
+                    
+            except Exception as e:
+                print(f"Error loading {filename}: {e}")
+    
+    return profiles
+
+
 def load_network_from_vicus(filepath):
     print(f"Loading VICUS file: {filepath}")
     
@@ -297,8 +530,69 @@ def load_network_from_vicus(filepath):
         return None, []
 
     net = Network()
+    net.G_nx = G_nx # Store full graph
     net.simultaneity_spline = sim_spline
-    base_profile_year = create_base_profile()
+    net.pos = pos
+    
+    # Load Real Profiles
+    # Modified to only load "Residential_SingleFamily_HeatingLoad.tsv" as requested
+    real_profiles = []
+    
+    target_filename = "Residential_SingleFamily_HeatingLoad.tsv"
+
+    # Re-implementing specific load for clarity and correctness:
+    specific_path = os.path.join("times-series", target_filename)
+    if os.path.exists(specific_path):
+        normalized = []
+        try:
+             with open(specific_path, 'r') as f:
+                lines = f.readlines()
+                vals = []
+                for line in lines[1:]:
+                    parts = line.split('\t')
+                    if len(parts) >= 2:
+                        try:
+                            vals.append(float(parts[1]))
+                        except ValueError: pass
+                if vals:
+                    peak = max(vals) if max(vals) > 0 else 1.0
+                    normalized = [v/peak for v in vals]
+        except Exception as e:
+            print(f"Error loading {target_filename}: {e}")
+        
+        if normalized:
+            # Extract a single representative day (24 hours) from annual data
+            # Find the day with the MAXIMUM peak heating demand
+            num_days = len(normalized) // 24
+            max_peak = -1
+            peak_day_index = 0
+            
+            for day in range(num_days):
+                day_start = day * 24
+                day_end = day_start + 24
+                day_peak = max(normalized[day_start:day_end])
+                if day_peak > max_peak:
+                    max_peak = day_peak
+                    peak_day_index = day
+            
+            start_hour = peak_day_index * 24
+            end_hour = start_hour + 24
+            
+            if len(normalized) >= end_hour:
+                daily_profile = normalized[start_hour:end_hour]
+                print(f"Found peak day: day {peak_day_index+1} (hours {start_hour}-{end_hour-1}) with peak={max_peak:.4f}")
+            else:
+                # Fallback: take first 24 hours if file is shorter than expected
+                daily_profile = normalized[:24] if len(normalized) >= 24 else normalized
+                print(f"Using first 24 hours as representative day")
+            
+            real_profiles = [daily_profile]
+            print(f"Force-selected profile: {target_filename} (peak day extraction)")
+    
+    # Fallback if specific file failed
+    if not real_profiles:
+        print("Specific profile not found/loaded. Using synthetic base profile.")
+        exit()
     
     node_to_consumer = {}
     node_attrs = nx.get_node_attributes(G_nx, 'heating_demand')
@@ -306,7 +600,11 @@ def load_network_from_vicus(filepath):
     for c_id in consumer_ids:
         demand = node_attrs.get(c_id, 0)
         if demand <= 0: demand = 10.0
-        c = Consumer(c_id, demand, base_profile_year)
+        
+        # Randomly assign a profile
+        assigned_profile = random.choice(real_profiles)
+        
+        c = Consumer(c_id, demand, assigned_profile)
         net.add_consumer(c)
         node_to_consumer[c_id] = c
         
@@ -338,23 +636,60 @@ def load_network_from_vicus(filepath):
 
 # --- Main ---
 
-def create_synthetic_network():
-    print("Creating synthetic network...")
-    net = Network()
-    base_profile_year = create_base_profile()
-    # No spline in synthetic
+def plot_simultaneity_curve(relevant_edges, output_path, title="Simultaneity Factor vs Downstream Consumers"):
+    print(f"Generating simultaneity curve: {output_path}")
     
-    all_consumers = []
-    for i in range(100):
-        peak = 10 + random.uniform(-2, 2)
-        c = Consumer(i, peak, base_profile_year)
-        net.add_consumer(c)
-        all_consumers.append(c)
-        
-    edge_Main = Edge("Edge_Main", all_consumers, None)
-    net.add_edge(edge_Main)
+    n_consumers = []
+    actual_sim = []
+    target_sim = []
     
-    return net, [edge_Main]
+    for edge in relevant_edges:
+        n = edge.n_consumers
+        if n > 0:
+            n_consumers.append(n)
+            actual_sim.append(edge.calculate_current_simultaneity())
+            target_sim.append(edge.get_target_simultaneity())
+            
+    if not n_consumers:
+        print("No data to plot for simultaneity curve.")
+        return
+
+    plt.figure(figsize=(10, 6))
+    
+    # Plot Actual
+    plt.scatter(n_consumers, actual_sim, color='blue', label='Actual Optimization Result', alpha=0.7)
+    
+    # Plot Target (Sort for line plot)
+    sorted_pairs = sorted(zip(n_consumers, target_sim))
+    sorted_n, sorted_t = zip(*sorted_pairs)
+    
+    # Generate a smooth target curve for reference if possible
+    # We can use the spline from the first edge if available, or just the points we have
+    # For better visualization, let's query the target function over a range
+    
+    # Check if we have a spline
+    spline = relevant_edges[0].simultaneity_spline if relevant_edges else None
+    if spline:
+        x_range = range(min(n_consumers), max(n_consumers) + 5)
+        y_range = [spline.value(x) for x in x_range]
+        plt.plot(x_range, y_range, color='green', linestyle='--', label='Target Curve (Spline)')
+    else:
+        # Fallback to scatter/line of points we have
+         plt.plot(sorted_n, sorted_t, color='green', linestyle='--', label='Target Curve (Points)')
+         
+    plt.xlabel("Number of Downstream Consumers")
+    plt.ylabel("Simultaneity Factor")
+    plt.title(title)
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    
+    try:
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        print("Saved.")
+    except Exception as e:
+        print(f"Error saving plot: {e}")
+    finally:
+        plt.close()
 
 def main():
     start_time = time.time()
@@ -363,9 +698,22 @@ def main():
     if filepath and os.path.exists(filepath):
         net, relevant_edges = load_network_from_vicus(filepath)
     else:
-        net, relevant_edges = create_synthetic_network()
+       print("No valid input file provided.")
+       return
     
     if not relevant_edges: return
+
+    # Prepare Output Dir
+    output_dir = "output"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        
+    base_name = os.path.basename(filepath)
+    base_name_no_ext = os.path.splitext(base_name)[0]
+
+    # Initial Visualization
+    output_vis_initial = os.path.join(output_dir, f"visualization_{base_name_no_ext}_initial.png")
+    visualize_network(net, relevant_edges, output_vis_initial, title="Initial Network State")
 
     print("\n--- BEFORE ---")
     print_edges = relevant_edges if len(relevant_edges) < 10 else relevant_edges[:10]
@@ -390,6 +738,13 @@ def main():
              print(f"{str(c.id):<15} | {int(c.time_shift):<15}")
 
     print(f"\nElapsed time: {time.time() - start_time:.2f}s")
+    
+    output_vis_final = os.path.join(output_dir, f"visualization_{base_name_no_ext}_final.png")
+    visualize_network(net, relevant_edges, output_vis_final, title="Optimized Network State")
+    
+    # Plot Simultaneity Curve
+    output_curve = os.path.join(output_dir, f"simultaneity_curve_{base_name_no_ext}.png")
+    plot_simultaneity_curve(relevant_edges, output_curve)
 
 if __name__ == "__main__":
     main()
