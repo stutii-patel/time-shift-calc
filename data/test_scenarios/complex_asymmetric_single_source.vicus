@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<VicusProject fileVersion="1.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:IBK="http://www.ibk-software.de/IBK" xsi:noNamespaceSchemaLocation="http://www.ibk-software.de/IBK VicusProject.xsd">
+
+	<ProjectInfo>
+		<Created>Mi. Jan 15 13:11:26 2026</Created>
+		<LastEdited>Mi. Jan 15 13:11:26 2026</LastEdited>
+	</ProjectInfo>
+	<Project>
+		<SolverParameter>
+			<IBK:Parameter name="RelTol" unit="---">1e-05</IBK:Parameter>
+			<IBK:Parameter name="AbsTol" unit="---">1e-10</IBK:Parameter>
+			<IBK:Parameter name="MaxTimeStep" unit="h">1</IBK:Parameter>
+			<IBK:Parameter name="MinTimeStep" unit="s">1e-08</IBK:Parameter>
+			<IBK:Parameter name="InitialTimeStep" unit="s">0.1</IBK:Parameter>
+			<IBK:Parameter name="NonlinSolverConvCoeff" unit="---">0.1</IBK:Parameter>
+			<IBK:Parameter name="IterativeSolverConvCoeff" unit="---">0.05</IBK:Parameter>
+			<IBK:Parameter name="DiscMinDx" unit="mm">2</IBK:Parameter>
+			<IBK:Parameter name="DiscStretchFactor" unit="---">4</IBK:Parameter>
+			<IBK:Parameter name="ViewfactorTileWidth" unit="cm">50</IBK:Parameter>
+			<IBK:Parameter name="SurfaceDiscretizationDensity" unit="---">1</IBK:Parameter>
+			<IBK:Parameter name="ControlTemperatureTolerance" unit="K">1e-05</IBK:Parameter>
+			<IBK:Parameter name="HydraulicNetworkAbsTol" unit="---">0.001</IBK:Parameter>
+			<IBK:Parameter name="HydraulicNetworkMassFluxScale" unit="---">1000</IBK:Parameter>
+			<IBK:IntPara name="PreILUWidth">3</IBK:IntPara>
+			<IBK:IntPara name="MaxKrylovDim">50</IBK:IntPara>
+			<IBK:IntPara name="MaxNonlinIter">3</IBK:IntPara>
+			<IBK:IntPara name="MaxOrder">5</IBK:IntPara>
+			<IBK:IntPara name="DiscMaxElementsPerLayer">20</IBK:IntPara>
+			<IBK:Flag name="DetectMaxTimeStep">true</IBK:Flag>
+			<IBK:Flag name="KinsolDisableLineSearch">false</IBK:Flag>
+		</SolverParameter>
+		<SimulationParameter>
+			<IBK:Parameter name="InitialTemperature" unit="C">20</IBK:Parameter>
+			<IBK:Parameter name="InitialRelativeHumidity" unit="%">50</IBK:Parameter>
+			<IBK:Parameter name="DomesticWaterSensitiveHeatGainFraction" unit="---">0</IBK:Parameter>
+			<IBK:IntPara name="StartYear">2001</IBK:IntPara>
+			<Interval>
+				<IBK:Parameter name="Start" unit="d">0</IBK:Parameter>
+				<IBK:Parameter name="End" unit="d">365</IBK:Parameter>
+			</Interval>
+			<SolarLoadsDistributionModel>
+				<DistributionType>SurfaceTypeFactor</DistributionType>
+				<IBK:Parameter name="RadiationLoadFractionZone" unit="---">0.1</IBK:Parameter>
+				<IBK:Parameter name="RadiationLoadFractionFloor" unit="---">0.5</IBK:Parameter>
+				<IBK:Parameter name="RadiationLoadFractionCeiling" unit="---">0.2</IBK:Parameter>
+				<IBK:Parameter name="RadiationLoadFractionWalls" unit="---">0.3</IBK:Parameter>
+			</SolarLoadsDistributionModel>
+		</SimulationParameter>
+		<Location>
+			<IBK:Parameter name="Longitude" unit="Deg">13.1</IBK:Parameter>
+			<IBK:Parameter name="Albedo" unit="%">0.2</IBK:Parameter>
+			<IBK:Flag name="PerezDiffuseRadiationModel">true</IBK:Flag>
+			<TimeZone>13</TimeZone>
+		</Location>
+		<Outputs>
+			<Grids>
+				<OutputGrid name="Hourly values">
+					<Intervals>
+						<Interval>
+							<IBK:Parameter name="Start" unit="d">0</IBK:Parameter>
+							<IBK:Parameter name="StepSize" unit="h">1</IBK:Parameter>
+						</Interval>
+					</Intervals>
+				</OutputGrid>
+			</Grids>
+			<IBK:Flag name="CreateDefaultZoneOutputs">true</IBK:Flag>
+		</Outputs>
+		<ViewSettings>
+			<CameraTranslation>0 -150 120</CameraTranslation>
+			<RotationMatrix>
+				<Wp>0.896352</Wp>
+				<X>0.441334</X>
+				<Y>0.0413892</Y>
+				<Z>0.00719023</Z>
+			</RotationMatrix>
+			<FarDistance>10000</FarDistance>
+			<GridPlanes>
+				<GridPlane color="#ffffff" width="500" spacing="10">
+					<Offset>0 0 0</Offset>
+					<Normal>0 0 1</Normal>
+					<LocalX>1 0 0</LocalX>
+				</GridPlane>
+			</GridPlanes>
+		</ViewSettings>
+		<ActiveNetworkId>3</ActiveNetworkId>
+		<GeometricNetworks>
+			<Network id="3" displayName="Complex Asymmetric Network" modelType="ThermalHydraulicNetwork">
+				<Nodes>
+					<!-- ========================================== -->
+					<!-- SOURCE NODE (1 source at bottom-left) -->
+					<!-- ========================================== -->
+					<NetworkNode id="1" displayName="Main Source" type="Source">
+						<Position>-50 -60 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">500000</IBK:Parameter>
+					</NetworkNode>
+
+					<!-- ========================================== -->
+					<!-- MAIN BACKBONE MIXERS (horizontal spine) -->
+					<!-- ========================================== -->
+					<NetworkNode id="10" type="Mixer">
+						<Position>-50 -40 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="11" type="Mixer">
+						<Position>-30 -40 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="12" type="Mixer">
+						<Position>0 -40 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="13" type="Mixer">
+						<Position>40 -40 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="14" type="Mixer">
+						<Position>70 -40 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+
+					<!-- ========================================== -->
+					<!-- BRANCH A: SHORT LEFT BRANCH (2 consumers) -->
+					<!-- ========================================== -->
+					<NetworkNode id="20" type="Mixer">
+						<Position>-50 -25 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<!-- Consumer A1: Industrial (high demand) -->
+					<NetworkNode id="21" displayName="Industrial A1" type="SubStation">
+						<Position>-60 -20 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">25000</IBK:Parameter>
+					</NetworkNode>
+					<!-- Consumer A2: Small residential -->
+					<NetworkNode id="22" displayName="Residential A2" type="SubStation">
+						<Position>-45 -15 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">8000</IBK:Parameter>
+					</NetworkNode>
+
+					<!-- ========================================== -->
+					<!-- BRANCH B: MEDIUM BRANCH WITH SUB-BRANCHES -->
+					<!-- (from mixer 11, goes north then splits) -->
+					<!-- ========================================== -->
+					<NetworkNode id="30" type="Mixer">
+						<Position>-30 -25 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="31" type="Mixer">
+						<Position>-25 -10 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<!-- Sub-branch B1: Goes west -->
+					<NetworkNode id="32" type="Mixer">
+						<Position>-40 -5 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="33" displayName="Office B1a" type="SubStation">
+						<Position>-50 0 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">12000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="34" displayName="Shop B1b" type="SubStation">
+						<Position>-35 5 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">6000</IBK:Parameter>
+					</NetworkNode>
+					<!-- Sub-branch B2: Goes east with 3 consumers -->
+					<NetworkNode id="35" type="Mixer">
+						<Position>-15 -5 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="36" type="Mixer">
+						<Position>-10 5 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="37" displayName="Apartment B2a" type="SubStation">
+						<Position>-20 10 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">9000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="38" displayName="Apartment B2b" type="SubStation">
+						<Position>-5 15 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">7500</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="39" displayName="House B2c" type="SubStation">
+						<Position>5 8 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">4500</IBK:Parameter>
+					</NetworkNode>
+					<!-- Direct consumer from B1 split -->
+					<NetworkNode id="40" displayName="Cafe B3" type="SubStation">
+						<Position>-28 0 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">3500</IBK:Parameter>
+					</NetworkNode>
+
+					<!-- ========================================== -->
+					<!-- BRANCH C: LONG DEEP BRANCH (many levels) -->
+					<!-- (from mixer 12, goes north with 4 levels) -->
+					<!-- ========================================== -->
+					<NetworkNode id="50" type="Mixer">
+						<Position>0 -25 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="51" type="Mixer">
+						<Position>5 -10 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="52" type="Mixer">
+						<Position>10 5 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="53" type="Mixer">
+						<Position>15 20 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<!-- Level 1 consumer -->
+					<NetworkNode id="54" displayName="Store C1" type="SubStation">
+						<Position>-8 -15 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">5500</IBK:Parameter>
+					</NetworkNode>
+					<!-- Level 2 consumers -->
+					<NetworkNode id="55" displayName="House C2a" type="SubStation">
+						<Position>-5 -5 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">4000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="56" displayName="Duplex C2b" type="SubStation">
+						<Position>15 -8 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">8500</IBK:Parameter>
+					</NetworkNode>
+					<!-- Level 3 consumers -->
+					<NetworkNode id="57" displayName="Villa C3a" type="SubStation">
+						<Position>0 10 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">15000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="58" displayName="Townhouse C3b" type="SubStation">
+						<Position>20 12 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">6500</IBK:Parameter>
+					</NetworkNode>
+					<!-- Level 4 (deepest) consumers -->
+					<NetworkNode id="59" displayName="Penthouse C4a" type="SubStation">
+						<Position>5 30 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">11000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="60" displayName="Loft C4b" type="SubStation">
+						<Position>25 28 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">7000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="61" displayName="Studio C4c" type="SubStation">
+						<Position>30 35 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">3000</IBK:Parameter>
+					</NetworkNode>
+
+					<!-- ========================================== -->
+					<!-- BRANCH D: WIDE SHALLOW BRANCH (many immediate consumers) -->
+					<!-- (from mixer 13, fans out with minimal depth) -->
+					<!-- ========================================== -->
+					<NetworkNode id="70" type="Mixer">
+						<Position>40 -25 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="71" type="Mixer">
+						<Position>30 -20 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="72" type="Mixer">
+						<Position>45 -15 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="73" type="Mixer">
+						<Position>55 -22 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<!-- Direct consumers from D mixers -->
+					<NetworkNode id="74" displayName="Clinic D1" type="SubStation">
+						<Position>25 -12 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">18000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="75" displayName="Gym D2" type="SubStation">
+						<Position>35 -8 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">14000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="76" displayName="Restaurant D3" type="SubStation">
+						<Position>42 -5 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">9500</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="77" displayName="Hotel D4" type="SubStation">
+						<Position>52 -8 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">35000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="78" displayName="Theater D5" type="SubStation">
+						<Position>60 -15 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">22000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="79" displayName="Pub D6" type="SubStation">
+						<Position>48 -28 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">5000</IBK:Parameter>
+					</NetworkNode>
+
+					<!-- ========================================== -->
+					<!-- BRANCH E: RIGHT END BRANCH -->
+					<!-- (from mixer 14, asymmetric with sub-sub-branch) -->
+					<!-- ========================================== -->
+					<NetworkNode id="80" type="Mixer">
+						<Position>70 -25 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="81" type="Mixer">
+						<Position>80 -20 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="82" type="Mixer">
+						<Position>90 -15 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<!-- Sub-branch E1 going up -->
+					<NetworkNode id="83" type="Mixer">
+						<Position>85 -5 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="84" type="Mixer">
+						<Position>80 10 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">0</IBK:Parameter>
+					</NetworkNode>
+					<!-- Consumers on E branch -->
+					<NetworkNode id="85" displayName="Factory E1" type="SubStation">
+						<Position>75 -30 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">45000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="86" displayName="Warehouse E2" type="SubStation">
+						<Position>88 -25 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">20000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="87" displayName="Office E3" type="SubStation">
+						<Position>95 -10 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">16000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="88" displayName="Lab E4" type="SubStation">
+						<Position>92 5 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">28000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="89" displayName="Datacenter E5" type="SubStation">
+						<Position>75 15 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">55000</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="90" displayName="School E6" type="SubStation">
+						<Position>85 20 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">32000</IBK:Parameter>
+					</NetworkNode>
+
+					<!-- ========================================== -->
+					<!-- BRANCH F: DIRECT CONSUMERS FROM BACKBONE -->
+					<!-- (immediate consumers attached to main spine) -->
+					<!-- ========================================== -->
+					<NetworkNode id="95" displayName="Kiosk F1" type="SubStation">
+						<Position>-50 -50 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">2500</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="96" displayName="Bakery F2" type="SubStation">
+						<Position>-30 -55 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">4500</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="97" displayName="Pharmacy F3" type="SubStation">
+						<Position>0 -52 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">3800</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="98" displayName="Bank F4" type="SubStation">
+						<Position>40 -55 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">12500</IBK:Parameter>
+					</NetworkNode>
+					<NetworkNode id="99" displayName="Museum F5" type="SubStation">
+						<Position>70 -55 0</Position>
+						<IBK:Parameter name="MaxHeatingDemand" unit="W">38000</IBK:Parameter>
+					</NetworkNode>
+
+				</Nodes>
+				<Edges>
+					<!-- ========================================== -->
+					<!-- SOURCE TO BACKBONE -->
+					<!-- ========================================== -->
+					<NetworkEdge supply="true" idPipe="1" idNode1="10" idNode2="1">
+						<Length>20</Length>
+					</NetworkEdge>
+
+					<!-- BACKBONE CONNECTIONS -->
+					<NetworkEdge supply="true" idPipe="1" idNode1="10" idNode2="11">
+						<Length>20</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="11" idNode2="12">
+						<Length>30</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="12" idNode2="13">
+						<Length>40</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="13" idNode2="14">
+						<Length>30</Length>
+					</NetworkEdge>
+
+					<!-- ========================================== -->
+					<!-- BRANCH A EDGES -->
+					<!-- ========================================== -->
+					<NetworkEdge supply="true" idPipe="1" idNode1="10" idNode2="20">
+						<Length>15</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="20" idNode2="21">
+						<Length>12</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="20" idNode2="22">
+						<Length>11</Length>
+					</NetworkEdge>
+
+					<!-- ========================================== -->
+					<!-- BRANCH B EDGES (with sub-branches) -->
+					<!-- ========================================== -->
+					<NetworkEdge supply="true" idPipe="1" idNode1="11" idNode2="30">
+						<Length>15</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="30" idNode2="31">
+						<Length>16</Length>
+					</NetworkEdge>
+					<!-- Sub-branch B1 west -->
+					<NetworkEdge supply="true" idPipe="1" idNode1="31" idNode2="32">
+						<Length>16</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="32" idNode2="33">
+						<Length>12</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="32" idNode2="34">
+						<Length>11</Length>
+					</NetworkEdge>
+					<!-- Sub-branch B2 east -->
+					<NetworkEdge supply="true" idPipe="1" idNode1="31" idNode2="35">
+						<Length>11</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="35" idNode2="36">
+						<Length>11</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="36" idNode2="37">
+						<Length>11</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="36" idNode2="38">
+						<Length>11</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="36" idNode2="39">
+						<Length>16</Length>
+					</NetworkEdge>
+					<!-- Direct consumer from B -->
+					<NetworkEdge idPipe="1" idNode1="31" idNode2="40">
+						<Length>10</Length>
+					</NetworkEdge>
+
+					<!-- ========================================== -->
+					<!-- BRANCH C EDGES (deep 4-level branch) -->
+					<!-- ========================================== -->
+					<NetworkEdge supply="true" idPipe="1" idNode1="12" idNode2="50">
+						<Length>15</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="50" idNode2="51">
+						<Length>16</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="51" idNode2="52">
+						<Length>16</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="52" idNode2="53">
+						<Length>16</Length>
+					</NetworkEdge>
+					<!-- Level 1 consumer -->
+					<NetworkEdge idPipe="1" idNode1="50" idNode2="54">
+						<Length>13</Length>
+					</NetworkEdge>
+					<!-- Level 2 consumers -->
+					<NetworkEdge idPipe="1" idNode1="51" idNode2="55">
+						<Length>11</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="51" idNode2="56">
+						<Length>10</Length>
+					</NetworkEdge>
+					<!-- Level 3 consumers -->
+					<NetworkEdge idPipe="1" idNode1="52" idNode2="57">
+						<Length>12</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="52" idNode2="58">
+						<Length>13</Length>
+					</NetworkEdge>
+					<!-- Level 4 consumers -->
+					<NetworkEdge idPipe="1" idNode1="53" idNode2="59">
+						<Length>14</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="53" idNode2="60">
+						<Length>13</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="53" idNode2="61">
+						<Length>20</Length>
+					</NetworkEdge>
+
+					<!-- ========================================== -->
+					<!-- BRANCH D EDGES (wide shallow fan-out) -->
+					<!-- ========================================== -->
+					<NetworkEdge supply="true" idPipe="1" idNode1="13" idNode2="70">
+						<Length>15</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="70" idNode2="71">
+						<Length>12</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="70" idNode2="72">
+						<Length>12</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="70" idNode2="73">
+						<Length>15</Length>
+					</NetworkEdge>
+					<!-- Consumer connections -->
+					<NetworkEdge idPipe="1" idNode1="71" idNode2="74">
+						<Length>10</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="71" idNode2="75">
+						<Length>13</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="72" idNode2="76">
+						<Length>10</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="72" idNode2="77">
+						<Length>10</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="73" idNode2="78">
+						<Length>9</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="73" idNode2="79">
+						<Length>9</Length>
+					</NetworkEdge>
+
+					<!-- ========================================== -->
+					<!-- BRANCH E EDGES (right end with sub-sub-branch) -->
+					<!-- ========================================== -->
+					<NetworkEdge supply="true" idPipe="1" idNode1="14" idNode2="80">
+						<Length>15</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="80" idNode2="81">
+						<Length>12</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="81" idNode2="82">
+						<Length>11</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="81" idNode2="83">
+						<Length>16</Length>
+					</NetworkEdge>
+					<NetworkEdge supply="true" idPipe="1" idNode1="83" idNode2="84">
+						<Length>16</Length>
+					</NetworkEdge>
+					<!-- Consumer connections -->
+					<NetworkEdge idPipe="1" idNode1="80" idNode2="85">
+						<Length>7</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="81" idNode2="86">
+						<Length>10</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="82" idNode2="87">
+						<Length>8</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="83" idNode2="88">
+						<Length>14</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="84" idNode2="89">
+						<Length>8</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="84" idNode2="90">
+						<Length>12</Length>
+					</NetworkEdge>
+
+					<!-- ========================================== -->
+					<!-- BRANCH F EDGES (direct backbone consumers) -->
+					<!-- ========================================== -->
+					<NetworkEdge idPipe="1" idNode1="10" idNode2="95">
+						<Length>10</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="11" idNode2="96">
+						<Length>15</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="12" idNode2="97">
+						<Length>12</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="13" idNode2="98">
+						<Length>15</Length>
+					</NetworkEdge>
+					<NetworkEdge idPipe="1" idNode1="14" idNode2="99">
+						<Length>15</Length>
+					</NetworkEdge>
+
+				</Edges>
+				<Origin>0 0 0</Origin>
+				<Type>DoublePipe</Type>
+				<IBK:Parameter name="TemperatureSetpoint" unit="C">20</IBK:Parameter>
+				<IBK:Parameter name="TemperatureDifference" unit="K">4</IBK:Parameter>
+				<IBK:Parameter name="MaxPressureLoss" unit="Pa/m">150</IBK:Parameter>
+				<IBK:Parameter name="ReferencePressure" unit="Pa">0</IBK:Parameter>
+				<IBK:Parameter name="DefaultFluidTemperature" unit="C">20</IBK:Parameter>
+				<IBK:Parameter name="InitialFluidTemperature" unit="C">20</IBK:Parameter>
+				<IBK:Parameter name="MaxPipeDiscretization" unit="m">5</IBK:Parameter>
+				<ScaleNodes>42</ScaleNodes>
+				<ScaleEdges>22</ScaleEdges>
+				<HasHeatExchangeWithGround>false</HasHeatExchangeWithGround>
+				<NetworkBuriedPipeProperties>
+					<IBK:Parameter name="PipeSpacing" unit="m">0.5</IBK:Parameter>
+					<IBK:Parameter name="PipeDepth" unit="m">0.8</IBK:Parameter>
+					<NumberOfSoilModels>10</NumberOfSoilModels>
+				</NetworkBuriedPipeProperties>
+				<PipeModel>DynamicPipe</PipeModel>
+				<IBK:LinearSpline name="Simultaneity">
+					<X unit="-">1 2 3 4 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100 105 110 115 120 125 130 135 140 145 150 155 160 165 170 175 180 185 190 195 200 205 210 215 220 225 230 235 240 245 250 255 260 265 270 275 280 285 290 295 </X>
+					<Y unit="-">1 0.999256 0.997538 0.995332 0.992683 0.97395 0.948488 0.919007 0.887645 0.855999 0.825178 0.795886 0.768521 0.743261 0.720135 0.699077 0.679968 0.662663 0.647005 0.632836 0.620008 0.608383 0.597834 0.588245 0.579516 0.571553 0.564278 0.557617 0.551507 0.545892 0.540722 0.535954 0.531547 0.527468 0.523686 0.520173 0.516905 0.51386 0.511019 0.508363 0.505878 0.50355 0.501365 0.499312 0.497381 0.495562 0.493847 0.492228 0.490699 0.489252 0.487882 0.486583 0.485351 0.484181 0.483069 0.482011 0.481004 0.480045 0.47913 0.478257 0.477423 0.476627 0.475865 </Y>
+				</IBK:LinearSpline>
+			</Network>
+		</GeometricNetworks>
+		<Buildings>
+			<Building id="1" displayName="Building">
+				<BuildingLevels>
+					<BuildingLevel id="2" displayName="Ground floor">
+						<Elevation>0</Elevation>
+						<Height>2.7</Height>
+					</BuildingLevel>
+				</BuildingLevels>
+			</Building>
+		</Buildings>
+		<PlainGeometry />
+		<EmbeddedDatabase>
+			<Pipes>
+				<NetworkPipe id="1" displayName="PE 25 x 2.3" color="#ffaf64" categoryName="DE: PE |EN: PE">
+					<IBK:Parameter name="DiameterOutside" unit="mm">25</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">2.3</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.07</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityWall" unit="W/mK">0.4</IBK:Parameter>
+					<IBK:Parameter name="HeatCapacityWall" unit="J/kgK">1900</IBK:Parameter>
+					<IBK:Parameter name="DensityWall" unit="kg/m3">960</IBK:Parameter>
+					<IBK:Parameter name="ThicknessInsulation" unit="mm">0</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityInsulation" unit="W/mK">1</IBK:Parameter>
+				</NetworkPipe>
+			</Pipes>
+		</EmbeddedDatabase>
+		<FMIDescription />
+	</Project>
+</VicusProject>
