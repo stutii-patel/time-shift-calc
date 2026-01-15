@@ -90,7 +90,7 @@
 					<!-- ========================================== -->
 					<!-- SOURCE NODE (1 source at bottom-left) -->
 					<!-- ========================================== -->
-					<NetworkNode id="1" displayName="Main Source" type="Source">
+					<NetworkNode id="100" displayName="Main Source" type="Source">
 						<Position>-50 -60 0</Position>
 						<IBK:Parameter name="MaxHeatingDemand" unit="W">500000</IBK:Parameter>
 					</NetworkNode>
@@ -373,7 +373,7 @@
 					<!-- ========================================== -->
 					<!-- SOURCE TO BACKBONE -->
 					<!-- ========================================== -->
-					<NetworkEdge supply="true" idPipe="1" idNode1="10" idNode2="1">
+					<NetworkEdge supply="true" idPipe="1" idNode1="10" idNode2="100">
 						<Length>20</Length>
 					</NetworkEdge>
 
