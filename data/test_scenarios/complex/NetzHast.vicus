@@ -1,0 +1,2284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<VicusProject fileVersion="1.9.0" xmlns:IBK="http://www.ibk-software.de/IBK">
+	<ProjectInfo>
+		<ProjectName>Nahwärmenetzes für Heizwärmeversorgung</ProjectName>
+		<YearOfConstruction>2020</YearOfConstruction>
+		<Comment>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;&#x0A;&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;&#x0A;p, li { white-space: pre-wrap; }&#x0A;&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Helvetica&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;&#x0A;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;LowEx Wärmenetz für Heizwärmeversorgung&lt;/span&gt;&lt;/p&gt;&#x0A;&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&#x0A;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Detailliertes Modell eines Nahwärmenetzes für die Versorgung des Heizwärmebedarfs (ohne Warmwasser). Als zentrale Wärmeversorgung ist eine Geothermie-Wärmepumpe verbaut, welche als Quelle die Temperatur eines Erdwärmesondenfeldes verwendet. Die Wärmepumpe läuft mit einer konstanten Vorlauftemperatur von 50°C. Die zentrale Umwälzpumpe wird mit einer konstanten Druckerhöhung von 1,4 bar betrieben.&lt;/p&gt;&#x0A;&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&#x0A;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Das Wärmenetz ist auf 15 K Spreizung ausgelegt und hat einen Druckverlust von ca. 1,4 bar am Auslegungspunkt.&lt;/p&gt;&#x0A;&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&#x0A;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Die Übergabestationen werden auf eine Temperaturspreizung von 15 K auf der Primärseite geregelt. Auf der Sekundärseite ist jeweils die Heizkurve des Gebäudes angelegt, welche ca. 35 °C bei .-14°C Außentemperatur beträgt. Die Spreizung auf der Sekundärseite beträgt 5 K.&lt;/p&gt;&#x0A;&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</Comment>
+		<Created>Do Feb 13 14:52:25 2025</Created>
+		<LastEdited>Sun Jan 11 15:56:22 2026</LastEdited>
+	</ProjectInfo>
+	<Project>
+		<SolverParameter>
+			<IBK:Parameter name="RelTol" unit="---">1e-05</IBK:Parameter>
+			<IBK:Parameter name="AbsTol" unit="---">1e-10</IBK:Parameter>
+			<IBK:Parameter name="MaxTimeStep" unit="h">1</IBK:Parameter>
+			<IBK:Parameter name="MinTimeStep" unit="s">1e-08</IBK:Parameter>
+			<IBK:Parameter name="InitialTimeStep" unit="s">0.1</IBK:Parameter>
+			<IBK:Parameter name="NonlinSolverConvCoeff" unit="---">0.1</IBK:Parameter>
+			<IBK:Parameter name="IterativeSolverConvCoeff" unit="---">0.05</IBK:Parameter>
+			<IBK:Parameter name="DiscMinDx" unit="mm">2</IBK:Parameter>
+			<IBK:Parameter name="DiscStretchFactor" unit="---">4</IBK:Parameter>
+			<IBK:Parameter name="ViewfactorTileWidth" unit="cm">50</IBK:Parameter>
+			<IBK:Parameter name="SurfaceDiscretizationDensity" unit="---">1</IBK:Parameter>
+			<IBK:Parameter name="ControlTemperatureTolerance" unit="K">1e-05</IBK:Parameter>
+			<IBK:Parameter name="HydraulicNetworkAbsTol" unit="---">0.0001</IBK:Parameter>
+			<IBK:Parameter name="HydraulicNetworkMassFluxScale" unit="---">1000</IBK:Parameter>
+			<IBK:Parameter name="HydraulicSolutionUpdateStep" unit="min">3</IBK:Parameter>
+			<IBK:IntPara name="PreILUWidth">3</IBK:IntPara>
+			<IBK:IntPara name="MaxKrylovDim">50</IBK:IntPara>
+			<IBK:IntPara name="MaxNonlinIter">3</IBK:IntPara>
+			<IBK:IntPara name="MaxOrder">5</IBK:IntPara>
+			<IBK:IntPara name="DiscMaxElementsPerLayer">20</IBK:IntPara>
+			<IBK:Flag name="KinsolDisableLineSearch">false</IBK:Flag>
+			<IBK:Flag name="HydraulicNewtonUsePrevInitConditions">true</IBK:Flag>
+			<IBK:Flag name="PreventSolvingHydraulicsInEveryStep">true</IBK:Flag>
+		</SolverParameter>
+		<SimulationParameter>
+			<IBK:Parameter name="InitialTemperature" unit="C">20</IBK:Parameter>
+			<IBK:Parameter name="InitialRelativeHumidity" unit="%">50</IBK:Parameter>
+			<IBK:Parameter name="DomesticWaterSensitiveHeatGainFraction" unit="---">0</IBK:Parameter>
+			<IBK:IntPara name="StartYear">2001</IBK:IntPara>
+			<Interval>
+				<IBK:Parameter name="Start" unit="d">0</IBK:Parameter>
+				<IBK:Parameter name="End" unit="d">10</IBK:Parameter>
+			</Interval>
+			<SolarLoadsDistributionModel>
+				<DistributionType>AreaWeighted</DistributionType>
+				<IBK:Parameter name="RadiationLoadFractionZone" unit="---">0.1</IBK:Parameter>
+				<IBK:Parameter name="RadiationLoadFractionFloor" unit="---">0.4</IBK:Parameter>
+				<IBK:Parameter name="RadiationLoadFractionCeiling" unit="---">0.2</IBK:Parameter>
+				<IBK:Parameter name="RadiationLoadFractionWalls" unit="---">0.3</IBK:Parameter>
+			</SolarLoadsDistributionModel>
+		</SimulationParameter>
+		<Location>
+			<IBK:Parameter name="Latitude" unit="Deg">52.38</IBK:Parameter>
+			<IBK:Parameter name="Longitude" unit="Deg">13.07</IBK:Parameter>
+			<IBK:Parameter name="Albedo" unit="%">20</IBK:Parameter>
+			<IBK:Flag name="PerezDiffuseRadiationModel">true</IBK:Flag>
+			<TimeZone>1</TimeZone>
+			<ClimateFilePath>${Database}/DB_climate/Europe/Germany/TRY2011/DE-04-TRY-2010__Potsdam__Jahr_00000K0_00081m.c6b</ClimateFilePath>
+		</Location>
+		<Outputs>
+			<Definitions>
+				<OutputDefinition quantity="InletTemperatureSecondary" sourceObjectType="NetworkElement">
+					<TimeType>None</TimeType>
+					<SourceObjectIds>3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,51,53</SourceObjectIds>
+					<GridName>Hourly</GridName>
+				</OutputDefinition>
+				<OutputDefinition quantity="OutletTemperatureSecondary" sourceObjectType="NetworkElement">
+					<TimeType>None</TimeType>
+					<SourceObjectIds>3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,51,53</SourceObjectIds>
+					<GridName>Hourly</GridName>
+				</OutputDefinition>
+			</Definitions>
+			<Grids>
+				<OutputGrid name="Hourly">
+					<Intervals>
+						<Interval>
+							<IBK:Parameter name="Start" unit="d">0</IBK:Parameter>
+							<IBK:Parameter name="StepSize" unit="h">1</IBK:Parameter>
+						</Interval>
+					</Intervals>
+				</OutputGrid>
+			</Grids>
+			<IBK:Flag name="CreateDefaultZoneOutputs">true</IBK:Flag>
+			<IBK:Flag name="CreateDefaultNetworkOutputs">true</IBK:Flag>
+		</Outputs>
+		<ViewSettings projectionMode="OrthographicProjection">
+			<OrthoProjectionWidth>722.804</OrthoProjectionWidth>
+			<CameraTranslation>5.99966 449.398 800</CameraTranslation>
+			<RotationMatrix>
+				<Wp>0.888664</Wp>
+				<X>0.328042</X>
+				<Y>0.108569</Y>
+				<Z>0.301403</Z>
+			</RotationMatrix>
+			<FarDistance>10000</FarDistance>
+			<ScaleFactorNodes>30</ScaleFactorNodes>
+			<ScaleFactorEdges>20</ScaleFactorEdges>
+			<EnableTextRendering>true</EnableTextRendering>
+			<ScaleFactorText>5</ScaleFactorText>
+			<UseUniformTextColor>false</UseUniformTextColor>
+			<GridPlanes>
+				<GridPlane color="#ffffff" width="1000" spacing="100">
+					<Offset>0 0 0</Offset>
+					<Normal>0 0 1</Normal>
+					<LocalX>1 0 0</LocalX>
+				</GridPlane>
+			</GridPlanes>
+		</ViewSettings>
+		<ActiveNetworkId>1540</ActiveNetworkId>
+		<GeometricNetworks>
+			<Network id="1540" displayName="Netz" idFluid="1110000" referencePressureNodeId="1566" preset="Conventional" modelType="ThermalHydraulicNetwork">
+				<Nodes>
+					<NetworkNode id="1542" displayName="Zum Sportplatz 15" type="SubStation" idSubNetwork="1130018">
+						<Position>8.68928 -30.2655 1.44</Position>
+						<IBK:Parameter name="NominalPower" unit="W">11620</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">232.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">11.62</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">11620</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.8</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1400</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">2100</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1482</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1543" displayName="Zum Sportplatz 17" type="SubStation" idSubNetwork="1130018">
+						<Position>-11.7544 -36.258 1.06</Position>
+						<IBK:Parameter name="NominalPower" unit="W">11620</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">232.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">11.62</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">11620</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.8</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1400</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">2100</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1476</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1544" displayName="Zum Sportplatz 19" type="SubStation" idSubNetwork="1130018">
+						<Position>-30.2834 -41.5307 0.95</Position>
+						<IBK:Parameter name="NominalPower" unit="W">11620</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">232.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">11.62</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">11620</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.8</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1400</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">2100</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1474</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1545" displayName="Jagdgrenzweg 5" type="SubStation" idSubNetwork="1130018">
+						<Position>65.1055 155.243 0.52</Position>
+						<IBK:Parameter name="NominalPower" unit="W">11350</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">227</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">11.35</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">11346.93</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.73</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1367.1</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">2050.65</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1391</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1546" displayName="An der Kleinbahn 32" type="SubStation" idSubNetwork="1130018">
+						<Position>103.337 -0.368125 1.75</Position>
+						<IBK:Parameter name="NominalPower" unit="W">9020</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">180.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">9.02</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9016.54</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.17</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1086.33</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1629.5</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1214</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1547" displayName="An der Kleinbahn 18, An der Kleinbahn 19" type="SubStation" idSubNetwork="1130018">
+						<Position>148.502 49.2344 0.79</Position>
+						<IBK:Parameter name="NominalPower" unit="W">9800</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">196</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">9.8</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9797.98</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.36</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1180.48</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1770.72</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1212</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1548" displayName="An der Kleinbahn 21" type="SubStation" idSubNetwork="1130018">
+						<Position>123.878 40.7074 1.49</Position>
+						<IBK:Parameter name="NominalPower" unit="W">7170</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">143.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">7.17</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">7170.12</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.73</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">863.87</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1295.8</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1204</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1549" displayName="An der Kleinbahn 29" type="SubStation" idSubNetwork="1130018">
+						<Position>76.2159 66.7617 1.72</Position>
+						<IBK:Parameter name="NominalPower" unit="W">9310</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">186.2</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">9.31</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9310.53</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.24</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1121.75</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1682.63</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1194</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1550" displayName="An der Kleinbahn 24" type="SubStation" idSubNetwork="1130018">
+						<Position>95.3369 92.6804 1.34</Position>
+						<IBK:Parameter name="NominalPower" unit="W">8140</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">162.8</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">8.14</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">8140.39</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.96</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">980.77</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1471.16</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1178</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1551" displayName="An der Kleinbahn 7" type="SubStation" idSubNetwork="1130018">
+						<Position>146.659 160.541 1.03</Position>
+						<IBK:Parameter name="NominalPower" unit="W">11620</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">232.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">11.62</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">11620</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.8</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1400</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">2100</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1174</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1552" displayName="An der Kleinbahn 3" type="SubStation" idSubNetwork="1130018">
+						<Position>186.184 120.961 0.74</Position>
+						<IBK:Parameter name="NominalPower" unit="W">7480</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">149.6</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">7.48</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">7475.73</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.8</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">900.69</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1351.04</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1163</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1553" displayName="An der Kleinbahn 5" type="SubStation" idSubNetwork="1130018">
+						<Position>168.494 161.591 1.01</Position>
+						<IBK:Parameter name="NominalPower" unit="W">8520</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">170.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">8.52</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">8515.14</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.05</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1025.92</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1538.88</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1158</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1554" displayName="An der Kleinbahn 14a, An der Kleinbahn 14b" type="SubStation" idSubNetwork="1130018">
+						<Position>163.705 86.6749 0.53</Position>
+						<IBK:Parameter name="NominalPower" unit="W">11140</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">222.8</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">11.14</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">11138.93</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.68</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1342.04</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">2013.06</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1157</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1555" displayName="Zum Sportplatz 7" type="SubStation" idSubNetwork="1130018">
+						<Position>12.9117 81.8595 1.87</Position>
+						<IBK:Parameter name="NominalPower" unit="W">8470</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">169.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">8.47</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">8469.24</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.04</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1020.39</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1530.59</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1101</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1556" displayName="Zum Sportplatz 32" type="SubStation" idSubNetwork="1130018">
+						<Position>-69.4492 -13.5582 1.05</Position>
+						<IBK:Parameter name="NominalPower" unit="W">9300</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">186</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">9.3</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9296</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.24</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1120</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1680</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1080</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1557" displayName="Zum Sportplatz 3" type="SubStation" idSubNetwork="1130018">
+						<Position>25.9403 6.00064 1.47</Position>
+						<IBK:Parameter name="NominalPower" unit="W">10260</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">205.2</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10.26</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">10259.3</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.47</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1236.06</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1854.09</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1074</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1558" displayName="Zum Sportplatz 31" type="SubStation" idSubNetwork="1130018">
+						<Position>-69.6137 7.07971 0.99</Position>
+						<IBK:Parameter name="NominalPower" unit="W">7290</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">145.8</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">7.29</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">7285.16</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.76</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">877.73</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1316.6</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1069</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1559" displayName="Zum Sportplatz 29" type="SubStation" idSubNetwork="1130018">
+						<Position>-72.7304 40.9116 1.44</Position>
+						<IBK:Parameter name="NominalPower" unit="W">9060</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">181.2</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">9.06</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9056.05</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.18</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1091.09</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1636.64</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1060</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1560" displayName="An der Kleinbahn 10" type="SubStation" idSubNetwork="1130018">
+						<Position>151.895 128.182 0.92</Position>
+						<IBK:Parameter name="NominalPower" unit="W">11620</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">232.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">11.62</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">11620</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.8</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1400</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">2100</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1057</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1561" displayName="An der Kleinbahn 28" type="SubStation" idSubNetwork="1130018">
+						<Position>66.4804 89.0961 1.12</Position>
+						<IBK:Parameter name="NominalPower" unit="W">10250</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">205</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10.25</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">10250</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.47</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1234.94</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1852.41</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1056</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1562" displayName="Zum Sportplatz 12" type="SubStation" idSubNetwork="1130018">
+						<Position>-7.85882 38.7419 1.6</Position>
+						<IBK:Parameter name="NominalPower" unit="W">7260</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">145.2</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">7.26</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">7260.76</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.75</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">874.79</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1312.19</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1043</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1563" displayName="Zum Sportplatz 13" type="SubStation" idSubNetwork="1130018">
+						<Position>-4.082 19.9035 1.78</Position>
+						<IBK:Parameter name="NominalPower" unit="W">11620</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">232.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">11.62</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">11620</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.8</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1400</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">2100</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1032</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1564" displayName="Zum Sportplatz 11" type="SubStation" idSubNetwork="1130018">
+						<Position>-10.128 57.9185 1.54</Position>
+						<IBK:Parameter name="NominalPower" unit="W">9270</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">185.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">9.27</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9270.44</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.23</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1116.92</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1675.38</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1030</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1566" displayName="Wärmeerzeuger" type="Source" idSubNetwork="1130019">
+						<Position>183.218 196.138 0.95</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1568" type="Mixer">
+						<Position>26.2629 121.703 1.26</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320001">
+							<IdCouplings>1320002,1320002</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1570" type="Mixer">
+						<Position>-47.3427 97.7144 1.47</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320003">
+							<IdCouplings>1320004,1320004</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1571" type="Mixer">
+						<Position>-70.9897 94.3854 1.75</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320005">
+							<IdCouplings>1320004,1320004</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1572" type="Mixer">
+						<Position>-52.0486 -22.7267 0.48</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320006">
+							<IdCouplings>1320007,1320007</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1573" type="Mixer">
+						<Position>-47.7318 -26.0854 0.4</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320006">
+							<IdCouplings>1320007,1320007</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1574" type="Mixer">
+						<Position>11.6448 -16.3952 1.16</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320008">
+							<IdCouplings>1320009,1320009</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1575" type="Mixer">
+						<Position>14.2211 -12.4626 1.23</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320008">
+							<IdCouplings>1320009,1320009</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1591" type="Mixer">
+						<Position>-7.37625 109.598 1.37</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320010">
+							<IdPipeFittingEdge3>1320011</IdPipeFittingEdge3>
+							<IdEdge1>1715</IdEdge1>
+							<IdEdge2>1655</IdEdge2>
+							<IdEdge3>1697</IdEdge3>
+							<IdCouplings>1320012,1320004,1320002</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1596" type="Mixer">
+						<Position>115.944 4.09581 1.38</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320013">
+							<IdCouplings>1320007,1320007</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1599" type="Mixer">
+						<Position>60.2637 137.245 0.93</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320014">
+							<IdPipeFittingEdge3>1320015</IdPipeFittingEdge3>
+							<IdEdge1>1760</IdEdge1>
+							<IdEdge2>1614</IdEdge2>
+							<IdEdge3>1724</IdEdge3>
+							<IdCouplings>1320009,1320002,1320016</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1604" type="Mixer">
+						<Position>181.47 78.0707 0</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320017">
+							<IdCouplings>1320009,1320009</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1605" type="Mixer">
+						<Position>186.336 85.1408 0.04</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320018">
+							<IdPipeFittingEdge3>1320019</IdPipeFittingEdge3>
+							<IdEdge1>1646</IdEdge1>
+							<IdEdge2>1608</IdEdge2>
+							<IdEdge3>1735</IdEdge3>
+							<IdCouplings>1320009,1320004,1320007</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1606" type="Mixer">
+						<Position>143.899 177.299 1.14</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320020">
+							<IdEdge1>1718</IdEdge1>
+							<IdEdge2>1609</IdEdge2>
+							<IdEdge3>1612</IdEdge3>
+							<IdCouplings>1320012,1320016,1320016</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1613" type="Mixer">
+						<Position>99.9326 42.3837 1.28</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320021">
+							<IdEdge1>1597</IdEdge1>
+							<IdEdge2>1634</IdEdge2>
+							<IdEdge3>1756</IdEdge3>
+							<IdCouplings>1320007,1320007,1320007</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1617" type="Mixer">
+						<Position>6.56107 -17.2249 1.13</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320022">
+							<IdPipeFittingEdge3>1320023</IdPipeFittingEdge3>
+							<IdEdge1>1584</IdEdge1>
+							<IdEdge2>1619</IdEdge2>
+							<IdEdge3>1618</IdEdge3>
+							<IdCouplings>1320009,1320024,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1620" type="Mixer">
+						<Position>-14.3048 -20.6302 0.94</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320025">
+							<IdPipeFittingEdge3>1320026</IdPipeFittingEdge3>
+							<IdEdge1>1618</IdEdge1>
+							<IdEdge2>1622</IdEdge2>
+							<IdEdge3>1621</IdEdge3>
+							<IdCouplings>1320024,1320007,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1623" type="Mixer">
+						<Position>-33.1913 -23.7124 0.65</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320027">
+							<IdEdge1>1621</IdEdge1>
+							<IdEdge2>1625</IdEdge2>
+							<IdEdge3>1624</IdEdge3>
+							<IdCouplings>1320007,1320007,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1626" type="Mixer">
+						<Position>71.2221 142.477 0.93</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320028">
+							<IdEdge1>1627</IdEdge1>
+							<IdEdge2>1628</IdEdge2>
+							<IdEdge3>1760</IdEdge3>
+							<IdCouplings>1320016,1320007,1320016</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1630" type="Mixer">
+						<Position>143.21 61.3252 0.55</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320025">
+							<IdEdge1>1631</IdEdge1>
+							<IdEdge2>1632</IdEdge2>
+							<IdEdge3>1721</IdEdge3>
+							<IdCouplings>1320024,1320007,1320024</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1633" type="Mixer">
+						<Position>119.413 50.9097 1.04</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320027">
+							<IdEdge1>1634</IdEdge1>
+							<IdEdge2>1635</IdEdge2>
+							<IdEdge3>1730</IdEdge3>
+							<IdCouplings>1320007,1320007,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1636" type="Mixer">
+						<Position>87.7255 71.5748 1.29</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320022">
+							<IdPipeFittingEdge3>1320023</IdPipeFittingEdge3>
+							<IdEdge1>1640</IdEdge1>
+							<IdEdge2>1638</IdEdge2>
+							<IdEdge3>1637</IdEdge3>
+							<IdCouplings>1320024,1320007,1320009</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1639" type="Mixer">
+						<Position>81.3462 86.8298 1.09</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320029">
+							<IdEdge1>1640</IdEdge1>
+							<IdEdge2>1727</IdEdge2>
+							<IdEdge3>1673</IdEdge3>
+							<IdCouplings>1320009,1320009,1320007</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1642" type="Mixer">
+						<Position>150.749 162.424 1.01</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320030">
+							<IdPipeFittingEdge3>1320031</IdPipeFittingEdge3>
+							<IdEdge1>1609</IdEdge1>
+							<IdEdge2>1644</IdEdge2>
+							<IdEdge3>1643</IdEdge3>
+							<IdCouplings>1320012,1320004,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1645" type="Mixer">
+						<Position>172.701 114.752 0.39</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdEdge1>1646</IdEdge1>
+							<IdEdge2>1647</IdEdge2>
+							<IdEdge3>1670</IdEdge3>
+							<IdCouplings>1320004,1320007,1320004</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1648" type="Mixer">
+						<Position>154.17 154.995 0.89</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdEdge1>1643</IdEdge1>
+							<IdEdge2>1650</IdEdge2>
+							<IdEdge3>1649</IdEdge3>
+							<IdCouplings>1320004,1320004,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1651" type="Mixer">
+						<Position>169.721 72.9286 0.16</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320022">
+							<IdEdge1>1607</IdEdge1>
+							<IdEdge2>1653</IdEdge2>
+							<IdEdge3>1652</IdEdge3>
+							<IdCouplings>1320009,1320009,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1654" type="Mixer">
+						<Position>-2.00128 79.2208 1.59</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320030">
+							<IdPipeFittingEdge3>1320031</IdPipeFittingEdge3>
+							<IdEdge1>1655</IdEdge1>
+							<IdEdge2>1656</IdEdge2>
+							<IdEdge3>1771</IdEdge3>
+							<IdCouplings>1320012,1320007,1320004</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1657" type="Mixer">
+						<Position>-53.9373 -11.0494 0.69</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320027">
+							<IdEdge1>1582</IdEdge1>
+							<IdEdge2>1659</IdEdge2>
+							<IdEdge3>1658</IdEdge3>
+							<IdCouplings>1320007,1320007,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1660" type="Mixer">
+						<Position>11.4092 3.42951 1.32</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320022">
+							<IdEdge1>1593</IdEdge1>
+							<IdEdge2>1662</IdEdge2>
+							<IdEdge3>1661</IdEdge3>
+							<IdCouplings>1320009,1320009,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1663" type="Mixer">
+						<Position>-57.1942 9.08837 0.7</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320025">
+							<IdPipeFittingEdge3>1320026</IdPipeFittingEdge3>
+							<IdEdge1>1664</IdEdge1>
+							<IdEdge2>1665</IdEdge2>
+							<IdEdge3>1658</IdEdge3>
+							<IdCouplings>1320007,1320024,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1666" type="Mixer">
+						<Position>-62.606 42.5491 1.22</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320022">
+							<IdEdge1>1667</IdEdge1>
+							<IdEdge2>1668</IdEdge2>
+							<IdEdge3>1741</IdEdge3>
+							<IdCouplings>1320009,1320007,1320009</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1669" type="Mixer">
+						<Position>163.958 133.737 0.64</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdEdge1>1649</IdEdge1>
+							<IdEdge2>1671</IdEdge2>
+							<IdEdge3>1670</IdEdge3>
+							<IdCouplings>1320004,1320004,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1672" type="Mixer">
+						<Position>78.3269 94.05 1.02</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320022">
+							<IdEdge1>1614</IdEdge1>
+							<IdEdge2>1674</IdEdge2>
+							<IdEdge3>1673</IdEdge3>
+							<IdCouplings>1320009,1320009,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1675" type="Mixer">
+						<Position>4.76579 40.9757 1.46</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdEdge1>1676</IdEdge1>
+							<IdEdge2>1677</IdEdge2>
+							<IdEdge3>1679</IdEdge3>
+							<IdCouplings>1320004,1320007,1320004</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1678" type="Mixer">
+						<Position>8.11251 22.0612 1.41</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdPipeFittingEdge3>1320033</IdPipeFittingEdge3>
+							<IdEdge1>1679</IdEdge1>
+							<IdEdge2>1680</IdEdge2>
+							<IdEdge3>1661</IdEdge3>
+							<IdCouplings>1320009,1320004,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1681" type="Mixer">
+						<Position>1.40681 59.9595 1.49</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdEdge1>1682</IdEdge1>
+							<IdEdge2>1683</IdEdge2>
+							<IdEdge3>1737</IdEdge3>
+							<IdCouplings>1320004,1320007,1320004</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1685" displayName="Jagdgrenzweg 22b" type="SubStation" idSubNetwork="1130018">
+						<Position>-56.0719 110.204 1.05</Position>
+						<IBK:Parameter name="NominalPower" unit="W">11620</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">232.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">11.62</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">11620</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.8</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1400</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">2100</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1206</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1686" displayName="Zum Sportplatz 10" type="SubStation" idSubNetwork="1130018">
+						<Position>-28.0684 84.7267 1.61</Position>
+						<IBK:Parameter name="NominalPower" unit="W">7550</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">151</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">7.55</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">7551.84</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.82</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">909.86</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1364.79</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">55</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1015</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1688" type="Mixer">
+						<Position>-54.1781 96.7521 1.54</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdEdge1>1581</IdEdge1>
+							<IdEdge2>1690</IdEdge2>
+							<IdEdge3>1689</IdEdge3>
+							<IdCouplings>1320004,1320004,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1691" type="Mixer">
+						<Position>-33.1532 101.913 1.33</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdEdge1>1580</IdEdge1>
+							<IdEdge2>1693</IdEdge2>
+							<IdEdge3>1697</IdEdge3>
+							<IdCouplings>1320004,1320007,1320004</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1699" displayName="Jagdgrenzweg 16b" type="SubStation" idSubNetwork="1130018">
+						<Position>-1.40073 126.641 0.98</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">123.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.2</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1101.52</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1652.28</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1394</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1700" displayName="Jagdgrenzweg 1" type="SubStation" idSubNetwork="1130018">
+						<Position>111.058 192.96 0.83</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">122.6</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.19</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1094.8</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1642.2</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1246</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1701" displayName="An der Kleinbahn 17" type="SubStation" idSubNetwork="1130018">
+						<Position>166.133 56.0378 0.45</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">117.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9992.000197</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.09</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1047.34</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1571.01</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1207</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1702" displayName="An der Kleinbahn 27" type="SubStation" idSubNetwork="1130018">
+						<Position>52.9969 121.536 1.29</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">118.2</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.11</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1055.67</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1583.51</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1198</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1703" displayName="An der Kleinbahn 23" type="SubStation" idSubNetwork="1130018">
+						<Position>107.842 77.6124 1.66</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">93.2</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000497</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.66</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">831.53</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1247.3</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1191</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1704" displayName="An der Kleinbahn 15" type="SubStation" idSubNetwork="1130018">
+						<Position>136.326 71.6265 1.1</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">104.6</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.87</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">933.87</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1400.8</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1188</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1705" displayName="An der Kleinbahn 9" type="SubStation" idSubNetwork="1130018">
+						<Position>104.044 147.988 1.5</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">90.8</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.62</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">810.18</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1215.27</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1168</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1706" displayName="An der Kleinbahn 1" type="SubStation" idSubNetwork="1130018">
+						<Position>207.157 76.6425 0.05</Position>
+						<IBK:Parameter name="NominalPower" unit="W">9680</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">193.6</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">9.68</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9678.09</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">3.46</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1728.23</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">2592.34</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1156</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1707" displayName="Zum Sportplatz 5" type="SubStation" idSubNetwork="1130018">
+						<Position>22.0127 46.2219 1.54</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">102.8</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.84</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">918.19</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1377.29</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1097</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1708" displayName="Zum Sportplatz 6" type="SubStation" idSubNetwork="1130018">
+						<Position>18.3821 63.1776 1.75</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">114.2</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.04</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1018.92</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1528.38</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1083</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1709" displayName="Zum Sportplatz 24" type="SubStation" idSubNetwork="1130018">
+						<Position>-41.6569 32.4499 1.54</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">105.4</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.88</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">940.66</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1410.99</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1076</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1710" displayName="Zum Sportplatz 23" type="SubStation" idSubNetwork="1130018">
+						<Position>-44.6972 11.4843 1.34</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">126.2</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">2.25</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">1125.95</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1688.92</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1063</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1711" displayName="Zum Sportplatz 25" type="SubStation" idSubNetwork="1130018">
+						<Position>-50.1352 51.5567 1.63</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">83</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.48</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">741.37</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1112.05</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1055</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1712" displayName="Zum Sportplatz 27" type="SubStation" idSubNetwork="1130018">
+						<Position>-80.8226 79.7336 2.46</Position>
+						<IBK:Parameter name="NominalPower" unit="kW">10</IBK:Parameter>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<NetworkBuildingDemand modelType="PredefinedSpline" withDomesticHotWaterDemand="false" buildingType="ResidentialBuildingSingleFamily" idHeatingCurve="1310002">
+							<IBK:Parameter name="FloorArea" unit="m2">88</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">10</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingSetpoint" unit="C">50</IBK:Parameter>
+							<IBK:Parameter name="ConstantHeatingTemperatureDifference" unit="K">7</IBK:Parameter>
+							<IBK:Parameter name="HeatingEnergyDemand" unit="kWh">9993.000318</IBK:Parameter>
+							<IBK:Parameter name="MaximumCoolingPower" unit="kW">1.57</IBK:Parameter>
+							<IBK:Parameter name="CoolingEnergyDemand" unit="kWh">785.82</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterDemand" unit="kWh">1178.73</IBK:Parameter>
+							<IBK:Parameter name="DomesticHotWaterSupplyTemperature" unit="C">60</IBK:Parameter>
+							<IBK:Parameter name="COP" unit="---">1</IBK:Parameter>
+						</NetworkBuildingDemand>
+						<IdOsmBuildingObject>1022</IdOsmBuildingObject>
+						<PipeFittingInstance />
+					</NetworkNode>
+					<NetworkNode id="1714" type="Mixer">
+						<Position>3.34399 113.456 1.4</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320034">
+							<IdEdge1>1592</IdEdge1>
+							<IdEdge2>1716</IdEdge2>
+							<IdEdge3>1715</IdEdge3>
+							<IdCouplings>1320002,1320002,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1717" type="Mixer">
+						<Position>123.292 167.426 1.14</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320028">
+							<IdEdge1>1718</IdEdge1>
+							<IdEdge2>1719</IdEdge2>
+							<IdEdge3>1733</IdEdge3>
+							<IdCouplings>1320016,1320007,1320016</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1720" type="Mixer">
+						<Position>160.506 68.8952 0.29</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320022">
+							<IdPipeFittingEdge3>1320023</IdPipeFittingEdge3>
+							<IdEdge1>1652</IdEdge1>
+							<IdEdge2>1722</IdEdge2>
+							<IdEdge3>1721</IdEdge3>
+							<IdCouplings>1320009,1320024,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1723" type="Mixer">
+						<Position>48.3132 131.782 1.06</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320034">
+							<IdEdge1>1578</IdEdge1>
+							<IdEdge2>1725</IdEdge2>
+							<IdEdge3>1724</IdEdge3>
+							<IdCouplings>1320002,1320002,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1726" type="Mixer">
+						<Position>93.4917 91.9088 1.3</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320007" />
+					</NetworkNode>
+					<NetworkNode id="1729" type="Mixer">
+						<Position>141.217 60.4527 0.57</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320025">
+							<IdPipeFittingEdge3>1320026</IdPipeFittingEdge3>
+							<IdEdge1>1631</IdEdge1>
+							<IdEdge2>1731</IdEdge2>
+							<IdEdge3>1730</IdEdge3>
+							<IdCouplings>1320024,1320007,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1732" type="Mixer">
+						<Position>100.063 156.296 1.04</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320028">
+							<IdEdge1>1627</IdEdge1>
+							<IdEdge2>1734</IdEdge2>
+							<IdEdge3>1733</IdEdge3>
+							<IdCouplings>1320016,1320016,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1736" type="Mixer">
+						<Position>4.38928 43.1036 1.47</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdEdge1>1676</IdEdge1>
+							<IdEdge2>1738</IdEdge2>
+							<IdEdge3>1737</IdEdge3>
+							<IdCouplings>1320004,1320004,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1740" type="Mixer">
+						<Position>-60.4802 29.4055 1.02</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320022">
+							<IdPipeFittingEdge3>1320023</IdPipeFittingEdge3>
+							<IdEdge1>1741</IdEdge1>
+							<IdEdge2>1742</IdEdge2>
+							<IdEdge3>1782</IdEdge3>
+							<IdCouplings>1320009,1320007,1320024</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1744" type="Mixer">
+						<Position>-63.7078 49.3615 1.44</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdPipeFittingEdge3>1320033</IdPipeFittingEdge3>
+							<IdEdge1>1745</IdEdge1>
+							<IdEdge2>1746</IdEdge2>
+							<IdEdge3>1667</IdEdge3>
+							<IdCouplings>1320009,1320004,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1747" type="Mixer">
+						<Position>-68.9311 81.6569 2.06</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320032">
+							<IdEdge1>1745</IdEdge1>
+							<IdEdge2>1749</IdEdge2>
+							<IdEdge3>1748</IdEdge3>
+							<IdCouplings>1320004,1320004,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1752" type="Mixer">
+						<Position>89.2599 67.9048 1.3</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320025">
+							<IdPipeFittingEdge3>1320026</IdPipeFittingEdge3>
+							<IdEdge1>1637</IdEdge1>
+							<IdEdge2>1753</IdEdge2>
+							<IdEdge3>1756</IdEdge3>
+							<IdCouplings>1320024,1320007,1320007</IdCouplings>
+							<IdsAdditionalPipeFittings>1320013</IdsAdditionalPipeFittings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1763" type="Mixer">
+						<Position>8.74305 61.4222 0</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320013">
+							<IdCouplings>1320007,1320007</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1764" type="Mixer">
+						<Position>8.41721 63.3772 0</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320013">
+							<IdCouplings>1320007,1320007</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1765" type="Mixer">
+						<Position>1.05459 61.9501 1.50033</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320035">
+							<IdEdge1>1682</IdEdge1>
+							<IdEdge2>1768</IdEdge2>
+							<IdEdge3>1771</IdEdge3>
+							<IdCouplings>1320004,1320007,1320004</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1774" type="Mixer">
+						<Position>-51.9451 10.084 0</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320013">
+							<IdCouplings>1320007,1320007</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1775" type="Mixer">
+						<Position>-52.3093 12.2863 0</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320013">
+							<IdCouplings>1320007,1320007</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+					<NetworkNode id="1776" type="Mixer">
+						<Position>-57.5543 11.3147 0.735066</Position>
+						<SourceNodeSupplyOption>SupplyClosestBuildingsWithoutLimit</SourceNodeSupplyOption>
+						<PipeFittingInstance idPipeFittingMain="1320036">
+							<IdEdge1>1664</IdEdge1>
+							<IdEdge2>1779</IdEdge2>
+							<IdEdge3>1782</IdEdge3>
+							<IdCouplings>1320024,1320007,1320024</IdCouplings>
+						</PipeFittingInstance>
+					</NetworkNode>
+				</Nodes>
+				<Edges>
+					<NetworkEdge id="1578" idPipe="1100076" idPipeHeatExchange="1300002" idNode1="1723" idNode2="1568" />
+					<NetworkEdge id="1580" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1691" idNode2="1570" />
+					<NetworkEdge id="1581" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1688" idNode2="1571" />
+					<NetworkEdge id="1582" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1657" idNode2="1572" />
+					<NetworkEdge id="1583" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1572" idNode2="1573" />
+					<NetworkEdge id="1584" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1617" idNode2="1574" />
+					<NetworkEdge id="1585" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1574" idNode2="1575" />
+					<NetworkEdge id="1592" idPipe="1100076" idPipeHeatExchange="1300002" idNode1="1714" idNode2="1568" />
+					<NetworkEdge id="1593" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1660" idNode2="1575" />
+					<NetworkEdge id="1597" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1613" idNode2="1596" />
+					<NetworkEdge id="1607" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1651" idNode2="1604" />
+					<NetworkEdge id="1608" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1604" idNode2="1605" />
+					<NetworkEdge id="1609" idPipe="1100075" idPipeHeatExchange="1300002" idNode1="1642" idNode2="1606" />
+					<NetworkEdge id="1612" idPipe="1100077" idPipeHeatExchange="1300002" idNode1="1606" idNode2="1566" />
+					<NetworkEdge id="1614" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1672" idNode2="1599" />
+					<NetworkEdge id="1618" idPipe="1100072" idPipeHeatExchange="1300002" idNode1="1620" idNode2="1617" />
+					<NetworkEdge id="1619" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1617" idNode2="1542" />
+					<NetworkEdge id="1621" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1623" idNode2="1620" />
+					<NetworkEdge id="1622" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1620" idNode2="1543" />
+					<NetworkEdge id="1624" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1573" idNode2="1623" />
+					<NetworkEdge id="1625" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1623" idNode2="1544" />
+					<NetworkEdge id="1627" idPipe="1100077" idPipeHeatExchange="1300002" idNode1="1732" idNode2="1626" />
+					<NetworkEdge id="1628" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1626" idNode2="1545" />
+					<NetworkEdge id="1629" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1596" idNode2="1546" />
+					<NetworkEdge id="1631" idPipe="1100072" idPipeHeatExchange="1300002" idNode1="1729" idNode2="1630" />
+					<NetworkEdge id="1632" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1630" idNode2="1547" />
+					<NetworkEdge id="1634" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1613" idNode2="1633" />
+					<NetworkEdge id="1635" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1633" idNode2="1548" />
+					<NetworkEdge id="1637" idPipe="1100072" idPipeHeatExchange="1300002" idNode1="1752" idNode2="1636" />
+					<NetworkEdge id="1638" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1636" idNode2="1549" />
+					<NetworkEdge id="1640" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1636" idNode2="1639" />
+					<NetworkEdge id="1641" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1726" idNode2="1550" />
+					<NetworkEdge id="1643" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1648" idNode2="1642" />
+					<NetworkEdge id="1644" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1642" idNode2="1551" />
+					<NetworkEdge id="1646" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1605" idNode2="1645" />
+					<NetworkEdge id="1647" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1645" idNode2="1552" />
+					<NetworkEdge id="1649" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1669" idNode2="1648" />
+					<NetworkEdge id="1650" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1648" idNode2="1553" />
+					<NetworkEdge id="1652" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1720" idNode2="1651" />
+					<NetworkEdge id="1653" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1651" idNode2="1554" />
+					<NetworkEdge id="1655" idPipe="1100075" idPipeHeatExchange="1300002" idNode1="1591" idNode2="1654" />
+					<NetworkEdge id="1656" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1654" idNode2="1555" />
+					<NetworkEdge id="1658" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1663" idNode2="1657" />
+					<NetworkEdge id="1659" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1657" idNode2="1556" />
+					<NetworkEdge id="1661" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1678" idNode2="1660" />
+					<NetworkEdge id="1662" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1660" idNode2="1557" />
+					<NetworkEdge id="1664" idPipe="1100072" idPipeHeatExchange="1300002" idNode1="1776" idNode2="1663" />
+					<NetworkEdge id="1665" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1663" idNode2="1558" />
+					<NetworkEdge id="1667" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1744" idNode2="1666" />
+					<NetworkEdge id="1668" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1666" idNode2="1559" />
+					<NetworkEdge id="1670" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1645" idNode2="1669" />
+					<NetworkEdge id="1671" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1669" idNode2="1560" />
+					<NetworkEdge id="1673" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1639" idNode2="1672" />
+					<NetworkEdge id="1674" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1672" idNode2="1561" />
+					<NetworkEdge id="1676" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1736" idNode2="1675" />
+					<NetworkEdge id="1677" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1675" idNode2="1562" />
+					<NetworkEdge id="1679" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1675" idNode2="1678" />
+					<NetworkEdge id="1680" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1678" idNode2="1563" />
+					<NetworkEdge id="1682" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1765" idNode2="1681" />
+					<NetworkEdge id="1683" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1681" idNode2="1564" />
+					<NetworkEdge id="1689" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1570" idNode2="1688" />
+					<NetworkEdge id="1690" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1688" idNode2="1685" />
+					<NetworkEdge id="1693" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1691" idNode2="1686" />
+					<NetworkEdge id="1697" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1691" idNode2="1591" />
+					<NetworkEdge id="1715" idPipe="1100076" idPipeHeatExchange="1300002" idNode1="1591" idNode2="1714" />
+					<NetworkEdge id="1716" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1714" idNode2="1699" />
+					<NetworkEdge id="1718" idPipe="1100077" idPipeHeatExchange="1300002" idNode1="1606" idNode2="1717" />
+					<NetworkEdge id="1719" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1717" idNode2="1700" />
+					<NetworkEdge id="1721" idPipe="1100072" idPipeHeatExchange="1300002" idNode1="1630" idNode2="1720" />
+					<NetworkEdge id="1722" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1720" idNode2="1701" />
+					<NetworkEdge id="1724" idPipe="1100076" idPipeHeatExchange="1300002" idNode1="1599" idNode2="1723" />
+					<NetworkEdge id="1725" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1723" idNode2="1702" />
+					<NetworkEdge id="1727" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1639" idNode2="1726" />
+					<NetworkEdge id="1730" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1633" idNode2="1729" />
+					<NetworkEdge id="1731" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1729" idNode2="1704" />
+					<NetworkEdge id="1733" idPipe="1100077" idPipeHeatExchange="1300002" idNode1="1717" idNode2="1732" />
+					<NetworkEdge id="1734" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1732" idNode2="1705" />
+					<NetworkEdge id="1735" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1605" idNode2="1706" />
+					<NetworkEdge id="1737" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1681" idNode2="1736" />
+					<NetworkEdge id="1738" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1736" idNode2="1707" />
+					<NetworkEdge id="1741" idPipe="1100073" idPipeHeatExchange="1300002" idNode1="1666" idNode2="1740" />
+					<NetworkEdge id="1742" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1740" idNode2="1709" />
+					<NetworkEdge id="1745" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1747" idNode2="1744" />
+					<NetworkEdge id="1746" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1744" idNode2="1711" />
+					<NetworkEdge id="1748" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1571" idNode2="1747" />
+					<NetworkEdge id="1749" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1747" idNode2="1712" />
+					<NetworkEdge id="1753" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1703" idNode2="1752" />
+					<NetworkEdge id="1756" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1752" idNode2="1613" />
+					<NetworkEdge id="1760" idPipe="1100077" idPipeHeatExchange="1300002" idNode1="1626" idNode2="1599" />
+					<NetworkEdge id="1766" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1708" idNode2="1763" />
+					<NetworkEdge id="1767" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1763" idNode2="1764" />
+					<NetworkEdge id="1768" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1764" idNode2="1765" />
+					<NetworkEdge id="1771" idPipe="1100074" idPipeHeatExchange="1300002" idNode1="1765" idNode2="1654" />
+					<NetworkEdge id="1777" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1710" idNode2="1774" />
+					<NetworkEdge id="1778" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1774" idNode2="1775" />
+					<NetworkEdge id="1779" idPipe="1100071" idPipeHeatExchange="1300002" idNode1="1775" idNode2="1776" />
+					<NetworkEdge id="1782" idPipe="1100072" idPipeHeatExchange="1300002" idNode1="1776" idNode2="1740" />
+				</Edges>
+				<AvailablePipes>1100071,1100072,1100073,1100074,1100075,1100076,1100077,1100078</AvailablePipes>
+				<Type>DoublePipe</Type>
+				<PipeModel>DynamicPipe</PipeModel>
+				<IBK:Parameter name="TemperatureSetpoint" unit="C">60</IBK:Parameter>
+				<IBK:Parameter name="TemperatureDifference" unit="K">15</IBK:Parameter>
+				<IBK:Parameter name="MaxPressureLoss" unit="Pa/m">100</IBK:Parameter>
+				<IBK:Parameter name="MaxVelocity" unit="m/s">3</IBK:Parameter>
+				<IBK:Parameter name="ReferencePressure" unit="Pa">200000</IBK:Parameter>
+				<IBK:Parameter name="DefaultFluidTemperature" unit="C">60</IBK:Parameter>
+				<IBK:Parameter name="InitialFluidTemperature" unit="C">60</IBK:Parameter>
+				<IBK:Parameter name="MaxPipeDiscretization" unit="m">10</IBK:Parameter>
+				<IBK:Parameter name="SoilModelDiscretizationStep" unit="K">0.2</IBK:Parameter>
+				<IBK:Parameter name="GroundCouplingTimeStep" unit="min">60</IBK:Parameter>
+				<IBK:LinearSpline name="Simultaneity">
+					<X unit="-">1 2 3 4 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100 105 110 115 120 125 130 135 140 145 150 155 160 165 170 175 180 185 190 195 200 205 210 215 220 225 230 235 240 245 250 255 260 265 270 275 280 285 290 295 </X>
+					<Y unit="-">1 0.999256 0.997538 0.995332 0.992683 0.97395 0.948488 0.919007 0.887645 0.855999 0.825178 0.795886 0.768521 0.743261 0.720135 0.699077 0.679968 0.662663 0.647005 0.632836 0.620008 0.608383 0.597834 0.588245 0.579516 0.571553 0.564278 0.557617 0.551507 0.545892 0.540722 0.535954 0.531547 0.527468 0.523686 0.520173 0.516905 0.51386 0.511019 0.508363 0.505878 0.50355 0.501365 0.499312 0.497381 0.495562 0.493847 0.492228 0.490699 0.489252 0.487882 0.486583 0.485351 0.484181 0.483069 0.482011 0.481004 0.480045 0.47913 0.478257 0.477423 0.476627 0.475865 </Y>
+				</IBK:LinearSpline>
+				<DiscretizeSoilModelsAlongNetwork>true</DiscretizeSoilModelsAlongNetwork>
+				<ApplyMaxVelocityForSizing>false</ApplyMaxVelocityForSizing>
+				<ApplyMaxTotalPressureDropForSizing>false</ApplyMaxTotalPressureDropForSizing>
+				<PipeSizingMode>MaxPipePressureLoss</PipeSizingMode>
+				<SupplyPumpType>CentralPump</SupplyPumpType>
+				<ConsiderSimultaneity>false</ConsiderSimultaneity>
+				<PipeFittingSettings method="WithinTolerance" tolerance="5" thresholdLengthForParallelBranch="5">
+					<IBK:Flag name="Elbow60Deg">true</IBK:Flag>
+					<IBK:Flag name="Elbow45Deg">true</IBK:Flag>
+					<IBK:Flag name="Elbow30Deg">true</IBK:Flag>
+					<IBK:Parameter name="Elbow90Deg" unit="---">0.5</IBK:Parameter>
+					<IBK:Parameter name="Elbow60Deg" unit="---">0.4</IBK:Parameter>
+					<IBK:Parameter name="Elbow45Deg" unit="---">0.325</IBK:Parameter>
+					<IBK:Parameter name="Elbow30Deg" unit="---">0.25</IBK:Parameter>
+					<IBK:Parameter name="ElbowCustom" unit="---">0.5</IBK:Parameter>
+					<IBK:Parameter name="Reducer" unit="---">0.3</IBK:Parameter>
+					<IBK:Parameter name="Expander" unit="---">0.37</IBK:Parameter>
+					<IBK:Parameter name="TPieceConverging" unit="---">1.25</IBK:Parameter>
+					<IBK:Parameter name="TPieceDiverging" unit="---">1.9</IBK:Parameter>
+					<TPieceOptions>UseParallelBranchForBuildingConnection</TPieceOptions>
+				</PipeFittingSettings>
+			</Network>
+		</GeometricNetworks>
+		<WorldCoordinateOrigin utmZone="33">
+			<Origin>400774.8663 5654046.979 317.52</Origin>
+		</WorldCoordinateOrigin>
+		<EmbeddedDatabase>
+			<SupplySystems>
+				<SupplySystem id="1085005" displayName="DE: SupplySys" color="#00fc15" supplyType="StandAlone">
+					<IBK:Parameter name="MaximumMassFlux" unit="kg/s">0.2</IBK:Parameter>
+					<IBK:Parameter name="SupplyTemperature" unit="C">35</IBK:Parameter>
+				</SupplySystem>
+				<SupplySystem id="1085006" displayName="DE: &lt;neues Versorgungssystem&gt;" color="#ffe146" supplyType="StandAlone">
+					<IBK:Parameter name="MaximumMassFlux" unit="kg/s">0</IBK:Parameter>
+					<IBK:Parameter name="SupplyTemperature" unit="C">0</IBK:Parameter>
+				</SupplySystem>
+			</SupplySystems>
+			<Pipes>
+				<NetworkPipe id="1100071" color="#466be3" categoryName="DE: PE isoliert | EN: PE insulated" productName="COOLFIT 2.0" manufacturerName="GF piping systems">
+					<IBK:Parameter name="DiameterOutside" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityWall" unit="W/mK">0.42</IBK:Parameter>
+					<IBK:Parameter name="HeatCapacityWall" unit="J/kgK">1900</IBK:Parameter>
+					<IBK:Parameter name="DensityWall" unit="kg/m3">960</IBK:Parameter>
+					<IBK:Parameter name="ThicknessInsulation" unit="mm">18.5</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityInsulation" unit="W/mK">0.022</IBK:Parameter>
+					<IBK:Parameter name="ThicknessOuterLayer" unit="mm">3</IBK:Parameter>
+					<NominalPressure>16</NominalPressure>
+					<FixedUValueGiven>false</FixedUValueGiven>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</NetworkPipe>
+				<NetworkPipe id="1100072" color="#28bceb" categoryName="DE: PE isoliert | EN: PE insulated" productName="COOLFIT 2.0" manufacturerName="GF piping systems">
+					<IBK:Parameter name="DiameterOutside" unit="mm">40</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">3.7</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityWall" unit="W/mK">0.42</IBK:Parameter>
+					<IBK:Parameter name="HeatCapacityWall" unit="J/kgK">1900</IBK:Parameter>
+					<IBK:Parameter name="DensityWall" unit="kg/m3">960</IBK:Parameter>
+					<IBK:Parameter name="ThicknessInsulation" unit="mm">22</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityInsulation" unit="W/mK">0.022</IBK:Parameter>
+					<IBK:Parameter name="ThicknessOuterLayer" unit="mm">3</IBK:Parameter>
+					<NominalPressure>16</NominalPressure>
+					<FixedUValueGiven>false</FixedUValueGiven>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</NetworkPipe>
+				<NetworkPipe id="1100073" color="#32f298" categoryName="DE: PE isoliert | EN: PE insulated" productName="COOLFIT 2.0" manufacturerName="GF piping systems">
+					<IBK:Parameter name="DiameterOutside" unit="mm">50</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">4.6</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityWall" unit="W/mK">0.42</IBK:Parameter>
+					<IBK:Parameter name="HeatCapacityWall" unit="J/kgK">1900</IBK:Parameter>
+					<IBK:Parameter name="DensityWall" unit="kg/m3">960</IBK:Parameter>
+					<IBK:Parameter name="ThicknessInsulation" unit="mm">17</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityInsulation" unit="W/mK">0.022</IBK:Parameter>
+					<IBK:Parameter name="ThicknessOuterLayer" unit="mm">3</IBK:Parameter>
+					<NominalPressure>16</NominalPressure>
+					<FixedUValueGiven>false</FixedUValueGiven>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</NetworkPipe>
+				<NetworkPipe id="1100074" color="#a4fc3c" categoryName="DE: PE isoliert | EN: PE insulated" productName="COOLFIT 2.0" manufacturerName="GF piping systems">
+					<IBK:Parameter name="DiameterOutside" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityWall" unit="W/mK">0.42</IBK:Parameter>
+					<IBK:Parameter name="HeatCapacityWall" unit="J/kgK">1900</IBK:Parameter>
+					<IBK:Parameter name="DensityWall" unit="kg/m3">960</IBK:Parameter>
+					<IBK:Parameter name="ThicknessInsulation" unit="mm">20.1</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityInsulation" unit="W/mK">0.022</IBK:Parameter>
+					<IBK:Parameter name="ThicknessOuterLayer" unit="mm">3.4</IBK:Parameter>
+					<NominalPressure>16</NominalPressure>
+					<FixedUValueGiven>false</FixedUValueGiven>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</NetworkPipe>
+				<NetworkPipe id="1100075" color="#eecf3a" categoryName="DE: PE isoliert | EN: PE insulated" productName="COOLFIT 2.0" manufacturerName="GF piping systems">
+					<IBK:Parameter name="DiameterOutside" unit="mm">75</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">6.8</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityWall" unit="W/mK">0.42</IBK:Parameter>
+					<IBK:Parameter name="HeatCapacityWall" unit="J/kgK">1900</IBK:Parameter>
+					<IBK:Parameter name="DensityWall" unit="kg/m3">960</IBK:Parameter>
+					<IBK:Parameter name="ThicknessInsulation" unit="mm">21.2</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityInsulation" unit="W/mK">0.022</IBK:Parameter>
+					<IBK:Parameter name="ThicknessOuterLayer" unit="mm">3.8</IBK:Parameter>
+					<NominalPressure>16</NominalPressure>
+					<FixedUValueGiven>false</FixedUValueGiven>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</NetworkPipe>
+				<NetworkPipe id="1100076" color="#fb7e21" categoryName="DE: PE isoliert | EN: PE insulated" productName="COOLFIT 2.0" manufacturerName="GF piping systems">
+					<IBK:Parameter name="DiameterOutside" unit="mm">90</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">8.2</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityWall" unit="W/mK">0.42</IBK:Parameter>
+					<IBK:Parameter name="HeatCapacityWall" unit="J/kgK">1900</IBK:Parameter>
+					<IBK:Parameter name="DensityWall" unit="kg/m3">960</IBK:Parameter>
+					<IBK:Parameter name="ThicknessInsulation" unit="mm">21</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityInsulation" unit="W/mK">0.022</IBK:Parameter>
+					<IBK:Parameter name="ThicknessOuterLayer" unit="mm">4</IBK:Parameter>
+					<NominalPressure>16</NominalPressure>
+					<FixedUValueGiven>false</FixedUValueGiven>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</NetworkPipe>
+				<NetworkPipe id="1100077" color="#d02f05" categoryName="DE: PE isoliert | EN: PE insulated" productName="COOLFIT 2.0" manufacturerName="GF piping systems">
+					<IBK:Parameter name="DiameterOutside" unit="mm">110</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">10</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityWall" unit="W/mK">0.42</IBK:Parameter>
+					<IBK:Parameter name="HeatCapacityWall" unit="J/kgK">1900</IBK:Parameter>
+					<IBK:Parameter name="DensityWall" unit="kg/m3">960</IBK:Parameter>
+					<IBK:Parameter name="ThicknessInsulation" unit="mm">21</IBK:Parameter>
+					<IBK:Parameter name="ThermalConductivityInsulation" unit="W/mK">0.022</IBK:Parameter>
+					<IBK:Parameter name="ThicknessOuterLayer" unit="mm">4</IBK:Parameter>
+					<NominalPressure>16</NominalPressure>
+					<FixedUValueGiven>false</FixedUValueGiven>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</NetworkPipe>
+			</Pipes>
+			<Fluids>
+				<NetworkFluid id="1110000" displayName="de:Wasser |en:Water" color="#ffa52c" productName="generic" manufacturerName="generic">
+					<IBK:Parameter name="Density" unit="kg/m3">998</IBK:Parameter>
+					<IBK:Parameter name="HeatCapacity" unit="J/kgK">4180</IBK:Parameter>
+					<IBK:Parameter name="Conductivity" unit="W/mK">0.6</IBK:Parameter>
+					<LinearSplineParameter name="KinematicViscosity" interpolationMethod="linear">
+						<X unit="C">0 10 20 30 40 50 60 70 80 90 </X>
+						<Y unit="m2/s">1.793e-06 1.307e-06 1.004e-06 8.01e-07 6.58e-07 5.54e-07 4.75e-07 4.13e-07 3.65e-07 3.26e-07 </Y>
+					</LinearSplineParameter>
+				</NetworkFluid>
+			</Fluids>
+			<SubNetworks>
+				<SubNetwork id="1130018" displayName="DE: Hausübergabestation | en: substation" color="#4bc900" modelType="Detailed">
+					<Elements>
+						<NetworkElement id="1" inletNodeId="333333" outletNodeId="1" componentId="0" displayName="Geregeltes Ventil" />
+						<NetworkElement id="2" inletNodeId="1" outletNodeId="666666" componentId="1" displayName="Hausübergabestation" />
+					</Elements>
+					<Components>
+						<NetworkComponent id="0" displayName="DE: Geregeltes Ventil" modelType="ControlledValve">
+							<NetworkController name="SecondarySideOutletTemperature controller" modelType="Constant" controllerType="PController" controlledProperty="SecondarySideOutletTemperature">
+								<MaximumControllerResultValue>0</MaximumControllerResultValue>
+								<IBK:Parameter name="Kp" unit="---">50000000</IBK:Parameter>
+							</NetworkController>
+							<IBK:Parameter name="Volume" unit="L">0.5</IBK:Parameter>
+						</NetworkComponent>
+						<NetworkComponent id="1" displayName="DE: Hausübergabestation" modelType="DistrictHeatingSubstationGeneric">
+							<IBK:Parameter name="Volume" unit="L">3</IBK:Parameter>
+							<IBK:Parameter name="NominalPressureLoss" unit="Bar">0.5</IBK:Parameter>
+							<IBK:Parameter name="LogarithmicTemperatureDifference" unit="K">10</IBK:Parameter>
+							<IBK:Parameter name="MinimumModulationLevel" unit="---">0</IBK:Parameter>
+						</NetworkComponent>
+					</Components>
+					<GraphicalNetwork>
+						<Blocks>
+							<Block networkElementid="-1" name="globalInlet" position="0, 400" />
+							<Block networkElementid="-1" name="globalOutlet" position="1102, 400" />
+							<Block networkElementid="1" position="228, 373" />
+							<Block networkElementid="2" position="652, 376" />
+						</Blocks>
+						<Connectors>
+							<Connector source="globalInlet.outlet" target="1.inlet">
+								<Segment orientation="Vertical" offset="-4" />
+								<Segment orientation="Horizontal" offset="158" />
+							</Connector>
+							<Connector source="1.outlet" target="2.inlet">
+								<Segment orientation="Vertical" offset="5" />
+								<Segment orientation="Horizontal" offset="340" />
+							</Connector>
+							<Connector source="2.outlet" target="globalOutlet.inlet">
+								<Segment orientation="Vertical" offset="-1" />
+								<Segment orientation="Horizontal" offset="366" />
+							</Connector>
+						</Connectors>
+					</GraphicalNetwork>
+					<IBK:Parameter name="PressureDrop" unit="Bar">0.6</IBK:Parameter>
+				</SubNetwork>
+				<SubNetwork id="1130019" displayName="DE: Zentrale" color="#ff0000" modelType="Detailed">
+					<Elements>
+						<NetworkElement id="2" inletNodeId="333333" outletNodeId="1" componentId="1120217" displayName="Yonos GIGA2.0-I 40/1-16/1,5" />
+						<NetworkElement id="3" inletNodeId="1" outletNodeId="666666" componentId="2" displayName="Wärmepumpe versorgungsseitig" />
+					</Elements>
+					<Components>
+						<NetworkComponent id="1120217" displayName="Yonos GIGA2.0-I 40/1-16/1,5" color="#009c82" manufacturer="WILO" modelType="ConstantPressurePump">
+							<IBK:Parameter name="PressureHead" unit="Bar">1.309988489</IBK:Parameter>
+							<IBK:Parameter name="Volume" unit="m3">0.001</IBK:Parameter>
+							<IBK:Parameter name="LowerLimitVolumeFlow" unit="m3/s">0.005102777778</IBK:Parameter>
+							<IBK:Parameter name="UpperLimitVolumeFlow" unit="m3/s">0.01</IBK:Parameter>
+							<IBK:Parameter name="AdditionalLimitVolumeFlow" unit="m3/s">0.003633333333</IBK:Parameter>
+							<IBK:Parameter name="AdditionalLimitPressureHead" unit="Pa">10000</IBK:Parameter>
+							<IBK:Parameter name="BestPointVolumeFlow" unit="m3/s">0.0062</IBK:Parameter>
+							<PolynomCoefficients>MaximumElectricalPower:1.03057e+11,-2.68186e+09,1.23583e+07,154792,504.491;MaximumPressureHead:6.89507e+12,-1.32255e+11,-1.12569e+09,8.8112e+06,162110;</PolynomCoefficients>
+						</NetworkComponent>
+						<NetworkComponent id="2" displayName="DE: Wärmepumpe versorgungsseitig" idHeatingCurve="1310004" modelType="HeatPumpVariableSupplySide">
+							<NetworkTemperatureBoundaryCondition modelType="TemperatureSpline" ambientTemperatureType="GeothermalCollectorTemperature">
+								<IBK:Parameter name="Temperature" unit="C">20</IBK:Parameter>
+								<IBK:Parameter name="ExternalHeatTransferCoefficient" unit="W/m2K">25</IBK:Parameter>
+							</NetworkTemperatureBoundaryCondition>
+							<IBK:Parameter name="Volume" unit="L">3</IBK:Parameter>
+							<IBK:Parameter name="MaximumHeatingPower" unit="kW">381.66</IBK:Parameter>
+							<IBK:Parameter name="NominalVolumeFlowRate" unit="m3/h">21.9574</IBK:Parameter>
+							<IBK:Parameter name="NominalPressureLoss" unit="Bar">0.2</IBK:Parameter>
+							<PolynomCoefficients>COP:-47.1938,0.55908,-0.143389,-0.00273061,0.000714288,0.0012619;</PolynomCoefficients>
+						</NetworkComponent>
+					</Components>
+					<GraphicalNetwork>
+						<Blocks>
+							<Block networkElementid="-1" name="globalInlet" position="0, 400" />
+							<Block networkElementid="-1" name="globalOutlet" position="1102, 400" />
+							<Block networkElementid="2" position="233, 389" />
+							<Block networkElementid="3" position="638, 412" />
+						</Blocks>
+						<Connectors>
+							<Connector source="globalInlet.outlet" target="2.inlet">
+								<Segment orientation="Horizontal" offset="163" />
+								<Segment orientation="Vertical" offset="1" />
+							</Connector>
+							<Connector source="2.outlet" target="3.inlet">
+								<Segment orientation="Vertical" offset="-3" />
+								<Segment orientation="Horizontal" offset="321" />
+							</Connector>
+							<Connector source="3.outlet" target="globalOutlet.inlet">
+								<Segment orientation="Vertical" offset="2" />
+								<Segment orientation="Horizontal" offset="380" />
+							</Connector>
+						</Connectors>
+					</GraphicalNetwork>
+					<IBK:Parameter name="PressureDrop" unit="Bar">0.6</IBK:Parameter>
+				</SubNetwork>
+			</SubNetworks>
+			<ZoneTemplates>
+				<ZoneTemplate id="1082501" displayName="DE: Wohnnutzung" color="#00ff00">
+					<IntLoadEquipment>1065006</IntLoadEquipment>
+					<ControlThermostat>1067501</ControlThermostat>
+					<Infiltration>1080001</Infiltration>
+					<IdealHeatingCooling>1075001</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082502" displayName="DE: Wohnnutzung Bad" color="#b53600">
+					<ControlThermostat>1067502</ControlThermostat>
+					<Infiltration>1080001</Infiltration>
+					<IdealHeatingCooling>1075001</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082503" displayName="DE: Hörsaal" color="#8ac800">
+					<IntLoadPerson>65034</IntLoadPerson>
+					<IntLoadEquipment>65035</IntLoadEquipment>
+					<IntLoadLighting>65036</IntLoadLighting>
+					<ControlThermostat>67508</ControlThermostat>
+					<Infiltration>1080001</Infiltration>
+					<NaturalVentilation>1077503</NaturalVentilation>
+					<IdealHeatingCooling>1075001</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082505" displayName="DE: Sanitär" color="#2ee700">
+					<IntLoadLighting>65057</IntLoadLighting>
+					<ControlThermostat>67515</ControlThermostat>
+					<Infiltration>1080001</Infiltration>
+					<NaturalVentilation>1077502</NaturalVentilation>
+					<IdealHeatingCooling>1075001</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082506" displayName="DE: Lager" color="#0003fe">
+					<IntLoadLighting>1170004</IntLoadLighting>
+					<ControlThermostat>1180002</ControlThermostat>
+					<Infiltration>1080001</Infiltration>
+					<IdealHeatingCooling>1075001</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082507" displayName="DE: Verkehrsfläche" color="#ae00e4">
+					<IntLoadLighting>65066</IntLoadLighting>
+					<ControlThermostat>67518</ControlThermostat>
+					<Infiltration>1080001</Infiltration>
+					<IdealHeatingCooling>1075001</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082510" displayName="DE: Wohnen" color="#be9f00">
+					<ControlThermostat>67500</ControlThermostat>
+					<Infiltration>1080008</Infiltration>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082512" displayName="DE: [FBH] Flur 17" color="#ddff2d">
+					<ControlThermostat>1067507</ControlThermostat>
+					<Infiltration>1080008</Infiltration>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082514" displayName="DE: [FBH] Wohnen" color="#004ef8">
+					<ControlThermostat>1067508</ControlThermostat>
+					<Infiltration>1080008</Infiltration>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082515" displayName="DE: &lt;new zone template&gt;" color="#00b727" />
+				<ZoneTemplate id="1082516" displayName="DE: [MetaBuild] unbeheizt Wohnen |EN: &lt;new zone template&gt;" color="#1782ff">
+					<ControlVentilationNatural>1072503</ControlVentilationNatural>
+					<Infiltration>1080007</Infiltration>
+					<NaturalVentilation>1077506</NaturalVentilation>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082517" displayName="DE: [MetaBuild] Bad kritisch 24 |EN: &lt;new zone template&gt;" color="#fc006f">
+					<ControlThermostat>1067507</ControlThermostat>
+					<Infiltration>1080005</Infiltration>
+					<NaturalVentilation>1077505</NaturalVentilation>
+					<IdealHeatingCooling>1075004</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082518" displayName="DE: [MetaBuild] Bad kritisch 24 |EN: &lt;new zone template&gt;" color="#fc006f">
+					<ControlThermostat>1067507</ControlThermostat>
+					<Infiltration>1080008</Infiltration>
+					<NaturalVentilation>1077506</NaturalVentilation>
+					<IdealHeatingCooling>1075006</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082519" displayName="DE: [MetaBuild] Wien Tiefgarage" color="#2affe3">
+					<Infiltration>1080006</Infiltration>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082520" displayName="DE: [MetaBuild] Wohnen 22 FBH |EN: &lt;new zone template&gt;" color="#00910a">
+					<IntLoadEquipment>1065008</IntLoadEquipment>
+					<ControlThermostat>1067508</ControlThermostat>
+					<ControlVentilationNatural>1072503</ControlVentilationNatural>
+					<Infiltration>1080005</Infiltration>
+					<NaturalVentilation>1077505</NaturalVentilation>
+					<IdealHeatingCooling>1075005</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082521" displayName="DE: [MetaBuild] Bad 24 |EN: &lt;new zone template&gt;" color="#ff0000">
+					<ControlThermostat>1067507</ControlThermostat>
+					<Infiltration>1080008</Infiltration>
+					<NaturalVentilation>1077506</NaturalVentilation>
+					<IdealHeatingCooling>1075007</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082522" displayName="DE: [MetaBuild] unbeheizt Wohnen |EN: &lt;new zone template&gt;" color="#1782ff">
+					<ControlVentilationNatural>1072503</ControlVentilationNatural>
+					<Infiltration>1080005</Infiltration>
+					<NaturalVentilation>1077505</NaturalVentilation>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082523" displayName="DE: [MetaBuild] Bad 24 |EN: &lt;new zone template&gt;" color="#ff0000">
+					<ControlThermostat>1067507</ControlThermostat>
+					<Infiltration>1080005</Infiltration>
+					<NaturalVentilation>1077505</NaturalVentilation>
+					<IdealHeatingCooling>1075004</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082524" displayName="DE: [MetaBuild] Wohnen 22 FBH |EN: &lt;new zone template&gt;" color="#00910a">
+					<IntLoadEquipment>1065008</IntLoadEquipment>
+					<ControlThermostat>1067508</ControlThermostat>
+					<ControlVentilationNatural>1072503</ControlVentilationNatural>
+					<Infiltration>1080008</Infiltration>
+					<NaturalVentilation>1077506</NaturalVentilation>
+					<IdealHeatingCooling>1075005</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082525" displayName="DE: [MetaBuild] Bad 24 FBH |EN: &lt;new zone template&gt;" color="#007dd4">
+					<ControlThermostat>1067507</ControlThermostat>
+					<Infiltration>1080008</Infiltration>
+					<NaturalVentilation>1077506</NaturalVentilation>
+					<IdealHeatingCooling>1075007</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082526" displayName="DE: [MetaBuild] Wohnen 22 |EN: &lt;new zone template&gt;" color="#00ff00">
+					<IntLoadEquipment>1065008</IntLoadEquipment>
+					<ControlThermostat>1067508</ControlThermostat>
+					<ControlVentilationNatural>1072503</ControlVentilationNatural>
+					<Infiltration>1080008</Infiltration>
+					<NaturalVentilation>1077506</NaturalVentilation>
+					<IdealHeatingCooling>1075005</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082527" displayName="DE: Wohnen" color="#be9f00">
+					<ControlThermostat>67500</ControlThermostat>
+					<Infiltration>1080005</Infiltration>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082528" displayName="DE: [MetaBuild] Keller" color="#aa5500">
+					<Infiltration>1080007</Infiltration>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082529" displayName="DE: [FBH] Flur 17" color="#ddff2d">
+					<ControlThermostat>1067507</ControlThermostat>
+					<Infiltration>1080005</Infiltration>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082530" displayName="DE: [FBH] Wohnen" color="#004ef8">
+					<ControlThermostat>1067508</ControlThermostat>
+					<Infiltration>1080005</Infiltration>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082531" displayName="DE: [MetaBuild] Wohnen 22 |EN: &lt;new zone template&gt;" color="#00ff00">
+					<IntLoadEquipment>1065008</IntLoadEquipment>
+					<ControlThermostat>1067508</ControlThermostat>
+					<ControlVentilationNatural>1072503</ControlVentilationNatural>
+					<Infiltration>1080005</Infiltration>
+					<NaturalVentilation>1077505</NaturalVentilation>
+					<IdealHeatingCooling>1075005</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082532" displayName="DE: [MetaBuild] unbeheizt Wohnen |EN: &lt;new zone template&gt;" color="#1782ff">
+					<ControlVentilationNatural>1072503</ControlVentilationNatural>
+					<Infiltration>1080007</Infiltration>
+					<NaturalVentilation>1077505</NaturalVentilation>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082533" displayName="DE: [MetaBuild] Bad 24 |EN: &lt;new zone template&gt;" color="#ff0000">
+					<ControlThermostat>1067507</ControlThermostat>
+					<Infiltration>1080005</Infiltration>
+					<NaturalVentilation>1077505</NaturalVentilation>
+					<IdealHeatingCooling>1075006</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082534" displayName="DE: [MetaBuild] Bad 24 FBH |EN: &lt;new zone template&gt;" color="#007dd4">
+					<ControlThermostat>1067507</ControlThermostat>
+					<Infiltration>1080005</Infiltration>
+					<NaturalVentilation>1077505</NaturalVentilation>
+					<IdealHeatingCooling>1075006</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1082535" displayName="DE: [MetaBuild] Passiv Beheizt 22 |EN: &lt;new zone template&gt;" color="#afffe0">
+					<IntLoadEquipment>1065008</IntLoadEquipment>
+					<ControlThermostat>1067508</ControlThermostat>
+					<ControlVentilationNatural>1072503</ControlVentilationNatural>
+					<Infiltration>1080005</Infiltration>
+					<NaturalVentilation>1077505</NaturalVentilation>
+					<IdealHeatingCooling>1075008</IdealHeatingCooling>
+				</ZoneTemplate>
+				<ZoneTemplate id="1240001" displayName="DE: Büro" color="#f70013">
+					<IntLoadPerson>1170001</IntLoadPerson>
+					<IntLoadEquipment>1170002</IntLoadEquipment>
+					<IntLoadLighting>1170003</IntLoadLighting>
+					<ControlThermostat>1180001</ControlThermostat>
+					<Infiltration>1080001</Infiltration>
+					<NaturalVentilation>1077501</NaturalVentilation>
+					<IdealHeatingCooling>1075001</IdealHeatingCooling>
+				</ZoneTemplate>
+			</ZoneTemplates>
+			<PipeHeatExchange>
+				<NetworkPipeHeatExchange id="1300001" displayName="EN: Erdreich" color="#62e100" modelType="SoilModel">
+					<PipeSoilModel>
+						<Soil soilType="WeaklyClayeyLoam" />
+						<IBK:Parameter name="PipeSpacing" unit="m">0.5</IBK:Parameter>
+						<IBK:Parameter name="PipeDepth" unit="m">0.8</IBK:Parameter>
+						<IBK:Parameter name="MoistureContent" unit="m3/m3">0.34</IBK:Parameter>
+					</PipeSoilModel>
+					<IBK:Parameter name="Temperature" unit="C">10</IBK:Parameter>
+					<IBK:Parameter name="ExternalHeatTransferCoefficient" unit="W/m2K">15</IBK:Parameter>
+				</NetworkPipeHeatExchange>
+				<NetworkPipeHeatExchange id="1300002" displayName="EN: tc" color="#13ff22" modelType="TemperatureConstant">
+					<PipeSoilModel>
+						<Soil soilType="SiltyLoam" />
+						<IBK:Parameter name="PipeSpacing" unit="m">0.5</IBK:Parameter>
+						<IBK:Parameter name="PipeDepth" unit="m">0.8</IBK:Parameter>
+						<IBK:Parameter name="MoistureContent" unit="m3/m3">0.25</IBK:Parameter>
+					</PipeSoilModel>
+					<IBK:Parameter name="Temperature" unit="C">10</IBK:Parameter>
+					<IBK:Parameter name="ExternalHeatTransferCoefficient" unit="W/m2K">15</IBK:Parameter>
+				</NetworkPipeHeatExchange>
+			</PipeHeatExchange>
+			<HeatingCurve>
+				<HeatingCurve id="1310002" displayName="DE: Gebäude Standard |EN: standard building" color="#00fc2e" modelType="AmbientTemperatureRoot" offset="10" slope="1.3" radiatorExponent="1.3" applicationType="NetworkBuildingHeatingCurve">
+					<IBK:Parameter name="SetPointTemperature" unit="C">35</IBK:Parameter>
+					<IBK:Parameter name="LinearMinAmbientTemperature" unit="C">-10</IBK:Parameter>
+					<IBK:Parameter name="LinearMaxAmbientTemperature" unit="C">10</IBK:Parameter>
+					<IBK:Parameter name="LinearMinSetpointTemperature" unit="C">50</IBK:Parameter>
+					<IBK:Parameter name="LinearMaxSetpointTemperature" unit="C">30</IBK:Parameter>
+					<IBK:Parameter name="RoomTemperature" unit="C">22</IBK:Parameter>
+					<IBK:Parameter name="TemperatureDifferenceSecondarySide" unit="K">15</IBK:Parameter>
+				</HeatingCurve>
+				<HeatingCurve id="1310004" displayName="de:Vorlauftemperatur Netz | en:Network supply temperature" color="#ff0000" modelType="Constant" offset="0" slope="1" radiatorExponent="1.3" applicationType="NetworkSupplyTemperature">
+					<IBK:Parameter name="SetPointTemperature" unit="C">70</IBK:Parameter>
+					<IBK:Parameter name="LinearMinAmbientTemperature" unit="C">-10</IBK:Parameter>
+					<IBK:Parameter name="LinearMaxAmbientTemperature" unit="C">10</IBK:Parameter>
+					<IBK:Parameter name="LinearMinSetpointTemperature" unit="C">0</IBK:Parameter>
+					<IBK:Parameter name="LinearMaxSetpointTemperature" unit="C">-10</IBK:Parameter>
+					<IBK:Parameter name="RoomTemperature" unit="C">70</IBK:Parameter>
+					<IBK:Parameter name="TemperatureDifferenceSecondarySide" unit="K">10</IBK:Parameter>
+				</HeatingCurve>
+				<HeatingCurve id="1310005" displayName="de:Vorlauftemperatur Netz | en:Network supply temperature" color="#ff0000" modelType="Constant" offset="0" slope="1" radiatorExponent="1.3" applicationType="NetworkSupplyTemperature">
+					<IBK:Parameter name="SetPointTemperature" unit="C">70</IBK:Parameter>
+					<IBK:Parameter name="LinearMinAmbientTemperature" unit="C">-10</IBK:Parameter>
+					<IBK:Parameter name="LinearMaxAmbientTemperature" unit="C">10</IBK:Parameter>
+					<IBK:Parameter name="LinearMinSetpointTemperature" unit="C">0</IBK:Parameter>
+					<IBK:Parameter name="LinearMaxSetpointTemperature" unit="C">-10</IBK:Parameter>
+					<IBK:Parameter name="RoomTemperature" unit="C">70</IBK:Parameter>
+				</HeatingCurve>
+				<HeatingCurve id="1310008" displayName="EN: Netzvorlauf" color="#7b21ff" modelType="AmbientTemperatureLinear" offset="0" slope="1" radiatorExponent="1.3" applicationType="NetworkSupplyTemperature">
+					<IBK:Parameter name="SetPointTemperature" unit="C">50</IBK:Parameter>
+					<IBK:Parameter name="LinearMinAmbientTemperature" unit="C">-10</IBK:Parameter>
+					<IBK:Parameter name="LinearMaxAmbientTemperature" unit="C">10</IBK:Parameter>
+					<IBK:Parameter name="LinearMinSetpointTemperature" unit="C">60</IBK:Parameter>
+					<IBK:Parameter name="LinearMaxSetpointTemperature" unit="C">50</IBK:Parameter>
+					<IBK:Parameter name="RoomTemperature" unit="C">50</IBK:Parameter>
+					<IBK:Parameter name="TemperatureDifferenceSecondarySide" unit="K">5</IBK:Parameter>
+				</HeatingCurve>
+			</HeatingCurve>
+			<PipeFittings>
+				<PipeFitting id="1320001" productName="generisch" manufacturerName="generisch" fittingType="ElbowCustom" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">90</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">8.2</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<IBK:Parameter name="CustomAngle" unit="Deg">5</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320002" productName="generisch" manufacturerName="generisch" fittingType="Coupling" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">90</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">8.2</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320003" productName="generisch" manufacturerName="generisch" fittingType="ElbowCustom" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<IBK:Parameter name="CustomAngle" unit="Deg">8</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320004" productName="generisch" manufacturerName="generisch" fittingType="Coupling" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320005" productName="generisch" manufacturerName="generisch" fittingType="Elbow90Deg" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320006" productName="generisch" manufacturerName="generisch" fittingType="Elbow45Deg" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320007" productName="generisch" manufacturerName="generisch" fittingType="Coupling" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320008" productName="generisch" manufacturerName="generisch" fittingType="Elbow45Deg" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">50</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">4.6</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320009" productName="generisch" manufacturerName="generisch" fittingType="Coupling" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">50</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">4.6</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320010" productName="generisch" manufacturerName="generisch" fittingType="TPiece" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">90</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">75</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">8.2</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">6.8</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320011" productName="generisch" manufacturerName="generisch" fittingType="Reducer" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">90</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideReduced" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">8.2</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallReduced" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320012" productName="generisch" manufacturerName="generisch" fittingType="Coupling" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">75</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">6.8</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320013" productName="generisch" manufacturerName="generisch" fittingType="Elbow90Deg" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320014" productName="generisch" manufacturerName="generisch" fittingType="TPiece" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">110</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">50</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">10</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">4.6</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320015" productName="generisch" manufacturerName="generisch" fittingType="Reducer" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">110</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideReduced" unit="mm">90</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">10</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallReduced" unit="mm">8.2</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320016" productName="generisch" manufacturerName="generisch" fittingType="Coupling" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">110</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">10</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320017" productName="generisch" manufacturerName="generisch" fittingType="Elbow30Deg" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">50</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">4.6</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320018" productName="generisch" manufacturerName="generisch" fittingType="TPiece" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">50</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">4.6</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320019" productName="generisch" manufacturerName="generisch" fittingType="Reducer" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideReduced" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallReduced" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320020" productName="generisch" manufacturerName="generisch" fittingType="TPiece" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">110</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">75</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">10</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">6.8</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320021" productName="generisch" manufacturerName="generisch" fittingType="TPiece" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320022" productName="generisch" manufacturerName="generisch" fittingType="ParallelBranch" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">50</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">4.6</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320023" productName="generisch" manufacturerName="generisch" fittingType="Reducer" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">50</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideReduced" unit="mm">40</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">4.6</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallReduced" unit="mm">3.7</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320024" productName="generisch" manufacturerName="generisch" fittingType="Coupling" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">40</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">3.7</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320025" productName="generisch" manufacturerName="generisch" fittingType="ParallelBranch" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">40</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">3.7</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320026" productName="generisch" manufacturerName="generisch" fittingType="Reducer" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">40</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideReduced" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">3.7</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallReduced" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320027" productName="generisch" manufacturerName="generisch" fittingType="ParallelBranch" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320028" productName="generisch" manufacturerName="generisch" fittingType="ParallelBranch" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">110</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">10</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320029" productName="generisch" manufacturerName="generisch" fittingType="TPiece" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">50</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">4.6</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320030" productName="generisch" manufacturerName="generisch" fittingType="ParallelBranch" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">75</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">6.8</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320031" productName="generisch" manufacturerName="generisch" fittingType="Reducer" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">75</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideReduced" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">6.8</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallReduced" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320032" productName="generisch" manufacturerName="generisch" fittingType="ParallelBranch" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320033" productName="generisch" manufacturerName="generisch" fittingType="Reducer" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideReduced" unit="mm">50</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallReduced" unit="mm">4.6</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320034" productName="generisch" manufacturerName="generisch" fittingType="ParallelBranch" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">90</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">8.2</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320035" productName="generisch" manufacturerName="generisch" fittingType="TPiece" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">63</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">5.8</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+				<PipeFitting id="1320036" productName="generisch" manufacturerName="generisch" fittingType="TPiece" isGeneric="true">
+					<IBK:Parameter name="DiameterOutside" unit="mm">40</IBK:Parameter>
+					<IBK:Parameter name="DiameterOutsideBranch" unit="mm">32</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWall" unit="mm">3.7</IBK:Parameter>
+					<IBK:Parameter name="ThicknessWallBranch" unit="mm">2.9</IBK:Parameter>
+					<IBK:Parameter name="RoughnessWall" unit="mm">0.007</IBK:Parameter>
+					<PipeLayout>SinglePipe</PipeLayout>
+					<PipeMaterialStandard>PlasticPipe</PipeMaterialStandard>
+				</PipeFitting>
+			</PipeFittings>
+		</EmbeddedDatabase>
+		<Certification>
+			<DIN4108 climate="B" shadingType="Standard" VentilationTypes="" />
+		</Certification>
+		<FMIDescription />
+	</Project>
+</VicusProject>
