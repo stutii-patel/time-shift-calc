@@ -211,19 +211,112 @@ def calculate_local_error(edges):
         total_error += (g_act - g_tgt)**2
     return total_error
 
-def run_hill_climbing_optimization(network, relevant_edges, max_iterations=20):
-    print(f"Starting Fast Hill Climbing for {len(network.consumers)} consumers...")
-   
-    # Determine data granularity
-    profile_length = len(network.consumers[0].base_profile)
 
-    max_shift = 3 * STEPS_PER_HOUR # 3 hours
+def multi_start_adaptive_hill_climbing(network, relevant_edges, num_restarts=5, max_iterations_per_phase=20):
+    """
+    Multi-start hill climbing with adaptive step sizes and coordinate descent.
+    """
+    print(f"\n{'='*80}")
+    print(f"MULTI-START ADAPTIVE HILL CLIMBING")
+    print(f"{'='*80}")
+    print(f"Consumers: {len(network.consumers)}")
+    print(f"Edges: {len(relevant_edges)}")
+    print(f"Restarts: {num_restarts}")
+    print(f"{'='*80}\n")
     
-    print(f"Max shift: {max_shift} timesteps ({max_shift/STEPS_PER_HOUR}h), Profile length: {profile_length}")
+    profile_length = len(network.consumers[0].base_profile)
+    max_shift_timesteps = 3 * STEPS_PER_HOUR  # Limit shifts to ±3 hours (realistic range)
+    
+    print(f"Profile length: {profile_length} timesteps ({profile_length/STEPS_PER_HOUR}h)")
+    print(f"Max shift: ±{max_shift_timesteps} timesteps (±{max_shift_timesteps/STEPS_PER_HOUR}h)\n")
+    
+    best_global_error = float('inf')
+    best_global_shifts = None
+    
+    for restart in range(num_restarts):
+        print(f"\n{'─'*80}")
+        print(f"RESTART {restart + 1}/{num_restarts}")
+        print(f"{'─'*80}")
+        
+        # Random initialization (except first restart)
+        if restart == 0:
+            print("Initialization: Zero shifts (baseline)")
+            for consumer in network.consumers:
+                consumer.time_shift = 0
+        else:
+            print(f"Initialization: Random shifts in range ±{max_shift_timesteps/STEPS_PER_HOUR}h")
+            for consumer in network.consumers:
+                # Spread shifts across entire period
+                consumer.time_shift = random.randint(-max_shift_timesteps, max_shift_timesteps)
+        
+        # Reinitialize all edges
+        for edge in relevant_edges:
+            edge.initialize_aggregation()
+        
+        initial_error = calculate_local_error(relevant_edges)
+        print(f"Initial error: {initial_error:.6f}")
+        
+        # Phase 1: Coarse search (large steps)
+        print(f"\n  Phase 1: Coarse search (±{profile_length//8} timesteps)")
+        shifts_coarse = [
+            profile_length // 8,   # ±3 hours for 24h profile
+            -profile_length // 8,
+            profile_length // 6,   # ±4 hours
+            -profile_length // 6,
+        ]
+        run_coordinate_descent_phase(network, relevant_edges, shifts_coarse, max_shift_timesteps, max_iterations_per_phase)
+        
+        # Phase 2: Medium search
+        print(f"\n  Phase 2: Medium search (±{profile_length//16} timesteps)")
+        shifts_medium = [
+            profile_length // 16,  # ±1.5 hours
+            -profile_length // 16,
+            profile_length // 12,  # ±2 hours
+            -profile_length // 12,
+        ]
+        run_coordinate_descent_phase(network, relevant_edges, shifts_medium, max_shift_timesteps, max_iterations_per_phase)
+        
+        # Phase 3: Fine search
+        print(f"\n  Phase 3: Fine-tuning (±{STEPS_PER_HOUR} timesteps)")
+        shifts_fine = [
+            STEPS_PER_HOUR,        # ±15 min for STEPS_PER_HOUR=4
+            -STEPS_PER_HOUR,
+            2 * STEPS_PER_HOUR,    # ±30 min
+            -2 * STEPS_PER_HOUR,
+        ]
+        run_coordinate_descent_phase(network, relevant_edges, shifts_fine, max_shift_timesteps, max_iterations_per_phase)
+        
+        final_error = calculate_local_error(relevant_edges)
+        print(f"\n  Final error: {final_error:.6f} (improvement: {initial_error - final_error:.6f})")
+        
+        if final_error < best_global_error:
+            best_global_error = final_error
+            best_global_shifts = [c.time_shift for c in network.consumers]
+            print(f"  ★ NEW BEST SOLUTION ★")
+    
+    # Apply best solution
+    print(f"\n{'='*80}")
+    print(f"OPTIMIZATION COMPLETE")
+    print(f"{'='*80}")
+    print(f"Best error: {best_global_error:.6f}")
+    print(f"Applying best solution...")
+    
+    for i, consumer in enumerate(network.consumers):
+        consumer.time_shift = best_global_shifts[i]
+    
+    for edge in relevant_edges:
+        edge.initialize_aggregation()
+    
+    return best_global_error
 
+def run_coordinate_descent_phase(network, relevant_edges, shift_increments, max_shift, max_iterations):
+    """
+    Coordinate descent: optimize one consumer at a time.
+    """
     for iteration in range(max_iterations):
         improved = False
         
+        # Shuffle to avoid bias
         indices = list(range(len(network.consumers)))
         random.shuffle(indices)
         
@@ -233,84 +326,63 @@ def run_hill_climbing_optimization(network, relevant_edges, max_iterations=20):
             original_profile = consumer.get_shifted_profile()
             
             best_local_shift = original_shift
-            best_local_improvement = 0
+            best_local_error = float('inf')
             
             affected_edges = network.consumer_to_edges[consumer.id]
-            base_edge_error = calculate_local_error(affected_edges)
+            base_error = calculate_local_error(affected_edges)
             
-            # Coordinate Descent: Test ALL valid shifts for this consumer
-            # Stateless check to avoid drift
-            
-            start_step = -int(max_shift)
-            end_step = int(max_shift)
-            
-            for candidate_shift in range(start_step, end_step + 1):
-                if candidate_shift == original_shift:
+            # Try all shift increments
+            for step in shift_increments:
+                new_shift = original_shift + step
+                
+                # Enforce bounds
+                if abs(new_shift) > max_shift:
                     continue
                 
-                # We do NOT update consumer.time_shift here to avoid cache churn / mutation risks
-                # We essentially simulate: new_profile = vec_roll(scaled_base, candidate)
-                # But we can use the consumer helper if we are careful.
-                # Actually, simpler to just calculate manually to be safe or use a temp object?
-                # Using consumer.get_shifted_profile() is fine if we set time_shift, 
-                # but we shouldn't modify the graph edges.
-                
-                consumer.time_shift = candidate_shift
+                # Temporarily apply shift
+                consumer.time_shift = new_shift
                 new_profile = consumer.get_shifted_profile()
                 
-                # Calculate Error Contribution for this candidate
-                current_candidate_error = 0
-                
+                # Calculate hypothetical error without modifying edges
+                hypothetical_error = 0
                 for edge in affected_edges:
-                    # Hypothetical profile: Current - Original + New
-                    # optimized vector check
-                    current_agg = edge.current_aggregated_profile
-                    # Manual vector math to avoid modifying edge state
                     hypothetical_agg = [
                         c - o + n 
-                        for c, o, n in zip(current_agg, original_profile, new_profile)
+                        for c, o, n in zip(edge.current_aggregated_profile, original_profile, new_profile)
                     ]
                     
-                    # Calc simultaneity
                     peak_agg = max(hypothetical_agg)
-                    # sum_individual_peaks is constant
                     if edge.sum_individual_peaks > 0:
                         sim = peak_agg / edge.sum_individual_peaks
                     else:
                         sim = 1.0
-                        
+                    
                     target = edge.get_target_simultaneity()
-                    current_candidate_error += (sim - target)**2
+                    hypothetical_error += (sim - target)**2
                 
-                improvement = base_edge_error - current_candidate_error
-                
-                if improvement > best_local_improvement + 1e-6:
-                    best_local_improvement = improvement
-                    best_local_shift = candidate_shift
+                if hypothetical_error < best_local_error:
+                    best_local_error = hypothetical_error
+                    best_local_shift = new_shift
             
-            # Restore consumer shift to original (it was modified in loop)
-            # This is important before applying the BEST move or reverting
+            # Revert to original
             consumer.time_shift = original_shift
-            # No need to revert edges because we never touched them!
+            consumer._cached_shift = int(round(original_shift))
+            consumer._cached_profile = original_profile
             
-            # Apply Best Move
-            if best_local_improvement > 0:
+            # Apply best move if improvement found
+            if best_local_error < base_error - 1e-9:
                 consumer.time_shift = best_local_shift
-                # Now we update the edges PERMANENTLY for this move
-                # We need fresh profile for best shift
-                best_profile = consumer.get_shifted_profile()
+                new_profile = consumer.get_shifted_profile()
                 for edge in affected_edges:
-                    edge.update_profile(original_profile, best_profile)
+                    edge.update_profile(original_profile, new_profile)
                 improved = True
         
-        current_total_error = calculate_local_error(relevant_edges)
-        print(f"Iteration {iteration+1}: Error = {current_total_error:.6f}")
+        current_error = calculate_local_error(relevant_edges)
+        print(f"    Iteration {iteration+1}: Error = {current_error:.6f}")
+        
         if not improved:
-            print("Converged.")
+            print(f"    Converged (no improvement)")
             break
-            
-    return calculate_local_error(relevant_edges)
-
 def visualize_network(net, relevant_edges, output_path, title="Network Simultaneity"):
     print(f"Generating visualization: {output_path}")
     
@@ -779,7 +851,7 @@ def main():
     for edge in print_edges:
         print(f"{edge.id}: Cons={edge.n_consumers} Target={edge.get_target_simultaneity():.4f}, Actual={edge.calculate_current_simultaneity():.4f}")
         
-    run_hill_climbing_optimization(net, relevant_edges)
+    multi_start_adaptive_hill_climbing(net, relevant_edges, num_restarts=5, max_iterations_per_phase=15)
     
     print("\n--- AFTER ---")
     for edge in print_edges:
