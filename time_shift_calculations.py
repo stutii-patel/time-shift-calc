@@ -15,6 +15,9 @@ except ImportError:
     print("Warning: create_graph.py not found. Only synthetic mode available.")
     create_graph_from_xml = None
 
+# CONSTANTS
+STEPS_PER_HOUR = 4  # 15-minute intervals
+
 # --- Helper Functions ---
 
 def vec_sum(v1, v2):
@@ -30,6 +33,29 @@ def vec_scale(v, scalar):
 
 def vec_zeros(n):
     return [0.0] * n
+
+def resample_vector(v, expansion_factor):
+    """Linearly interpolate vector v by expansion_factor."""
+    if expansion_factor <= 1:
+        return v
+    
+    new_len = len(v) * expansion_factor
+    new_v = []
+    
+    for i in range(new_len):
+        # Map new index i to old index (float)
+        old_idx = i / expansion_factor
+        
+        # Get indices for interpolation
+        idx0 = int(math.floor(old_idx))
+        idx1 = (idx0 + 1) % len(v) # Cyclic boundary for 24h profiles
+        
+        fraction = old_idx - idx0
+        
+        val = v[idx0] * (1 - fraction) + v[idx1] * fraction
+        new_v.append(val)
+        
+    return new_v
 
 # --- Linear Spline Class ---
 
@@ -137,14 +163,23 @@ class Edge:
         if self.n_consumers <= 1:
             return 1.0
         
-        if self.simultaneity_spline:
-            return self.simultaneity_spline.value(self.n_consumers)
-        print("Fallback Formula")
-        # Fallback Formula
-        a = 0.4497
-        b = 0.5512
-        c = 53.84
-        return a + b * math.exp(-self.n_consumers / c)
+        # Winter et al., Euroheat & Power 2001
+        # Confirmed constants:
+        a = 0.449677646267461
+        b = 0.551234688
+        c = 53.84382392
+        d = 1.762743268
+        
+        # User rule: "if any number of nodes greater than 295 we should take the last value"
+        # The C++ snippet generated up to nmax=300 and clamped/stopped.
+        # We will use N=300 as the clamp limit (approx 295-300 range where the curve flattens).
+        # Actually user said > 295 takes last value (0.475865).
+        # The formula at 295 is approx equal to that.
+        
+        x = min(self.n_consumers, 295) # Clamp input to 295
+        
+        val = a + (b / (1 + (x/c)**d))
+        return min(1.0, val)
 
 class Network:
     def __init__(self):
@@ -182,23 +217,12 @@ def run_hill_climbing_optimization(network, relevant_edges, max_iterations=20):
     # Determine data granularity
     profile_length = len(network.consumers[0].base_profile)
 
-    if profile_length > 1000:  # Annual data (8760 hours)
-        # User requested max_shift < 12 (setting to 12 to be safe/inclusive)
-        max_shift = 12 
-        # Shifts to try: small local adjustments since we are constrained
-        shifts_to_try = [1, -1, 3, -3, 6, -6, 12, -12]
-    else:  # Daily data
-        max_shift = 12  # 12 hours
-        shifts_to_try = [1, -1, 3, -3, 6, -6, 12, -12]
+    max_shift = 3 * STEPS_PER_HOUR # 3 hours
     
-    print(f"Max shift: {max_shift} timesteps, Profile length: {profile_length}")
+    print(f"Max shift: {max_shift} timesteps ({max_shift/STEPS_PER_HOUR}h), Profile length: {profile_length}")
 
     for iteration in range(max_iterations):
         improved = False
-
-        # Adaptive step sizing: smaller steps in later iterations
-        if iteration > max_iterations * 0.7:
-            shifts_to_try = [s for s in shifts_to_try if abs(s) <= 24]
         
         indices = list(range(len(network.consumers)))
         random.shuffle(indices)
@@ -214,35 +238,69 @@ def run_hill_climbing_optimization(network, relevant_edges, max_iterations=20):
             affected_edges = network.consumer_to_edges[consumer.id]
             base_edge_error = calculate_local_error(affected_edges)
             
-            for step in shifts_to_try:
-                new_shift = original_shift + step
-                if abs(new_shift) > max_shift: continue
+            # Coordinate Descent: Test ALL valid shifts for this consumer
+            # Stateless check to avoid drift
+            
+            start_step = -int(max_shift)
+            end_step = int(max_shift)
+            
+            for candidate_shift in range(start_step, end_step + 1):
+                if candidate_shift == original_shift:
+                    continue
                 
-                consumer.time_shift = new_shift
+                # We do NOT update consumer.time_shift here to avoid cache churn / mutation risks
+                # We essentially simulate: new_profile = vec_roll(scaled_base, candidate)
+                # But we can use the consumer helper if we are careful.
+                # Actually, simpler to just calculate manually to be safe or use a temp object?
+                # Using consumer.get_shifted_profile() is fine if we set time_shift, 
+                # but we shouldn't modify the graph edges.
+                
+                consumer.time_shift = candidate_shift
                 new_profile = consumer.get_shifted_profile()
                 
+                # Calculate Error Contribution for this candidate
+                current_candidate_error = 0
+                
                 for edge in affected_edges:
-                    edge.update_profile(original_profile, new_profile)
+                    # Hypothetical profile: Current - Original + New
+                    # optimized vector check
+                    current_agg = edge.current_aggregated_profile
+                    # Manual vector math to avoid modifying edge state
+                    hypothetical_agg = [
+                        c - o + n 
+                        for c, o, n in zip(current_agg, original_profile, new_profile)
+                    ]
                     
-                new_edge_error = calculate_local_error(affected_edges)
-                improvement = base_edge_error - new_edge_error
+                    # Calc simultaneity
+                    peak_agg = max(hypothetical_agg)
+                    # sum_individual_peaks is constant
+                    if edge.sum_individual_peaks > 0:
+                        sim = peak_agg / edge.sum_individual_peaks
+                    else:
+                        sim = 1.0
+                        
+                    target = edge.get_target_simultaneity()
+                    current_candidate_error += (sim - target)**2
+                
+                improvement = base_edge_error - current_candidate_error
                 
                 if improvement > best_local_improvement + 1e-6:
                     best_local_improvement = improvement
-                    best_local_shift = new_shift
-                
-                for edge in affected_edges:
-                    edge.update_profile(new_profile, original_profile)
-                    
-                consumer.time_shift = original_shift
-                consumer._cached_shift = int(round(original_shift))
-                consumer._cached_profile = original_profile
-
+                    best_local_shift = candidate_shift
+            
+            # Restore consumer shift to original (it was modified in loop)
+            # This is important before applying the BEST move or reverting
+            consumer.time_shift = original_shift
+            # No need to revert edges because we never touched them!
+            
+            # Apply Best Move
             if best_local_improvement > 0:
                 consumer.time_shift = best_local_shift
-                new_profile = consumer.get_shifted_profile()
+                # Now we update the edges PERMANENTLY for this move
+                # We need fresh profile for best shift
+                best_profile = consumer.get_shifted_profile()
                 for edge in affected_edges:
-                    edge.update_profile(original_profile, new_profile)
+                    edge.update_profile(original_profile, best_profile)
                 improved = True
         
         current_total_error = calculate_local_error(relevant_edges)
@@ -378,7 +436,8 @@ def visualize_network(net, relevant_edges, output_path, title="Network Simultane
         if n in consumer_map:
             # Consumer node
             shift = consumer_map[n].time_shift
-            node_labels[n] = f"{n}\n{int(shift)}h"
+            shift_hours = shift / STEPS_PER_HOUR
+            node_labels[n] = f"{n}\n{shift_hours:.2f}h"
             node_colors.append('#4ECDC4')  # Teal for consumers
             node_sizes.append(800)
         elif n_type == 'Source':
@@ -586,8 +645,8 @@ def load_network_from_vicus(filepath):
                 daily_profile = normalized[:24] if len(normalized) >= 24 else normalized
                 print(f"Using first 24 hours as representative day")
             
-            real_profiles = [daily_profile]
-            print(f"Force-selected profile: {target_filename} (peak day extraction)")
+            real_profiles = [resample_vector(daily_profile, STEPS_PER_HOUR)]
+            print(f"Force-selected profile: {target_filename} (peak day extraction, resampled to {len(real_profiles[0])} steps)")
     
     # Fallback if specific file failed
     if not real_profiles:
@@ -728,14 +787,14 @@ def main():
 
     shifts = [c.time_shift for c in net.consumers]
     if shifts:
-        print(f"\nShifts: Min={min(shifts)}, Max={max(shifts)}")
+        print(f"\nShifts: Min={min(shifts)/STEPS_PER_HOUR}h, Max={max(shifts)/STEPS_PER_HOUR}h")
         print("\n--- INDIVIDUAL SHIFTS ---")
         print(f"{'Consumer ID':<15} | {'Shift (Hours)':<15}")
         print("-" * 35)
         sorted_consumers = sorted(net.consumers, key=lambda x: int(x.id) if str(x.id).isdigit() else str(x.id))
         
         for c in sorted_consumers:
-             print(f"{str(c.id):<15} | {int(c.time_shift):<15}")
+             print(f"{str(c.id):<15} | {c.time_shift/STEPS_PER_HOUR:<15.2f}")
 
     print(f"\nElapsed time: {time.time() - start_time:.2f}s")
     
