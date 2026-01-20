@@ -57,6 +57,25 @@ def resample_vector(v, expansion_factor):
         
     return new_v
 
+def plot_peak_day(v, output_path):
+    """Plot the extracted peak day profile for verification."""
+    plt.figure(figsize=(10, 5))
+    hours = [i / STEPS_PER_HOUR for i in range(len(v))]
+    plt.plot(hours, v, marker='o', linestyle='-', markersize=2)
+    plt.title("Extracted Peak Day Profile (Normalized)")
+    plt.xlabel("Hour of Day")
+    plt.ylabel("Normalized Load")
+    plt.grid(True, alpha=0.3)
+    plt.xlim(0, 24)
+    plt.ylim(0, 1.1)
+    
+    # Ensure directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    
+    plt.savefig(output_path, dpi=150)
+    plt.close()
+    print(f"Peak day profile plot saved to {output_path}")
+
 # --- Linear Spline Class ---
 
 class LinearSpline:
@@ -110,20 +129,59 @@ class LinearSpline:
 # --- Data Structures ---
 
 class Consumer:
+    SHIFT_RESOLUTION = 100  # Internal resolution for fractional shifts
+
     def __init__(self, id, peak_load, base_profile):
         self.id = id
         self.peak_load = peak_load
         self.base_profile = base_profile
         self.time_shift = 0 
+        
+        # Pre-calculate high-resolution scaled profile for efficient fractional shifts
+        # This handles the "one time calculation" requirement.
+        scaled_profile = vec_scale(self.base_profile, self.peak_load)
+        self.n_base = len(scaled_profile)
+        
+        # Use linear interpolation to expand the profile
+        self.high_res_profile = []
+        for i in range(self.n_base * self.SHIFT_RESOLUTION):
+            pos = i / self.SHIFT_RESOLUTION
+            idx0 = int(math.floor(pos))
+            idx1 = (idx0 + 1) % self.n_base
+            frac = pos - idx0
+            val = scaled_profile[idx0] * (1 - frac) + scaled_profile[idx1] * frac
+            self.high_res_profile.append(val)
+            
+        # Double the profile to handle cyclic shifts with simple slicing
+        self.high_res_profile_doubled = self.high_res_profile + self.high_res_profile
+        
         self._cached_profile = None
         self._cached_shift = None
 
     def get_shifted_profile(self):
-        shift = int(round(self.time_shift))
-        if self._cached_profile is None or self._cached_shift != shift:
-             scaled = vec_scale(self.base_profile, self.peak_load)
-             self._cached_profile = vec_roll(scaled, shift)
-             self._cached_shift = shift
+        # Extremely fast lookup using pre-calculated high-res profile
+        if self._cached_profile is None or self._cached_shift != self.time_shift:
+            # Calculate the starting index in the high-res profile
+            # Python's % handles negative shifts correctly
+            total_steps = self.n_base * self.SHIFT_RESOLUTION
+            
+            # The shift is in 'base' timesteps. Convert to high-res steps.
+            # We want to 'pull' values from the PAST for a positive shift (delay)
+            # which is equivalent to rolling forward. 
+            # In our vec_roll(v, 1) [1,2,3] -> [3,1,2]. 
+            # This means index 0 now contains what was at index -1.
+            
+            # To match vec_roll(v, shift) logic:
+            # shifted_v[i] = v[(i - shift) % n]
+            
+            shift_steps = int(round(self.time_shift * self.SHIFT_RESOLUTION))
+            
+            start_offset = (total_steps - (shift_steps % total_steps)) % total_steps
+            
+            # Slice with step = SHIFT_RESOLUTION to get 'n_base' points
+            self._cached_profile = self.high_res_profile_doubled[start_offset : start_offset + total_steps : self.SHIFT_RESOLUTION]
+            self._cached_shift = self.time_shift
+            
         return self._cached_profile
 
 class Edge:
@@ -259,30 +317,30 @@ def multi_start_adaptive_hill_climbing(network, relevant_edges, num_restarts=5, 
         # Phase 1: Coarse search (large steps)
         print(f"\n  Phase 1: Coarse search (±{profile_length//8} timesteps)")
         shifts_coarse = [
-            profile_length // 8,   # ±3 hours for 24h profile
-            -profile_length // 8,
-            profile_length // 6,   # ±4 hours
-            -profile_length // 6,
+            max_shift_timesteps * 0.75, # 75% of max
+            -max_shift_timesteps * 0.75,
+            max_shift_timesteps * 0.5, # 50% of max
+            -max_shift_timesteps * 0.5,
         ]
         run_coordinate_descent_phase(network, relevant_edges, shifts_coarse, max_shift_timesteps, max_iterations_per_phase)
         
         # Phase 2: Medium search
         print(f"\n  Phase 2: Medium search (±{profile_length//16} timesteps)")
         shifts_medium = [
-            profile_length // 16,  # ±1.5 hours
-            -profile_length // 16,
-            profile_length // 12,  # ±2 hours
-            -profile_length // 12,
+            max_shift_timesteps * 0.4, # 40% of max
+            -max_shift_timesteps * 0.4,
+            max_shift_timesteps * 0.25, # 25% of max
+            -max_shift_timesteps * 0.25,
         ]
         run_coordinate_descent_phase(network, relevant_edges, shifts_medium, max_shift_timesteps, max_iterations_per_phase)
         
         # Phase 3: Fine search
-        print(f"\n  Phase 3: Fine-tuning (±{STEPS_PER_HOUR} timesteps)")
+        print(f"\n  Phase 3: Fine-tuning (±1.0 timesteps = ±0.25h)")
         shifts_fine = [
-            STEPS_PER_HOUR,        # ±15 min for STEPS_PER_HOUR=4
-            -STEPS_PER_HOUR,
-            2 * STEPS_PER_HOUR,    # ±30 min
-            -2 * STEPS_PER_HOUR,
+            1.0,                   # ±15 min (0.25h)
+            -1.0,
+            2.0,                   # ±30 min (0.50h)
+            -2.0,
         ]
         run_coordinate_descent_phase(network, relevant_edges, shifts_fine, max_shift_timesteps, max_iterations_per_phase)
         
@@ -368,7 +426,7 @@ def run_coordinate_descent_phase(network, relevant_edges, shift_increments, max_
             
             # Revert to original
             consumer.time_shift = original_shift
-            consumer._cached_shift = int(round(original_shift))
+            consumer._cached_shift = original_shift
             consumer._cached_profile = original_profile
             
             # Apply best move if improvement found
@@ -668,42 +726,36 @@ def load_network_from_vicus(filepath):
     net.pos = pos
     
     # Load Real Profiles
-    # Modified to only load "Residential_SingleFamily_HeatingLoad.tsv" as requested
     real_profiles = []
     
     target_filename = "Residential_SingleFamily_HeatingLoad.tsv"
 
-    # Re-implementing specific load for clarity and correctness:
     specific_path = os.path.join("times-series", target_filename)
     if os.path.exists(specific_path):
-        normalized = []
+        vals = []
         try:
              with open(specific_path, 'r') as f:
                 lines = f.readlines()
-                vals = []
                 for line in lines[1:]:
                     parts = line.split('\t')
                     if len(parts) >= 2:
                         try:
                             vals.append(float(parts[1]))
                         except ValueError: pass
-                if vals:
-                    peak = max(vals) if max(vals) > 0 else 1.0
-                    normalized = [v/peak for v in vals]
         except Exception as e:
             print(f"Error loading {target_filename}: {e}")
-        
-        if normalized:
+            
+        if vals:
             # Extract a single representative day (24 hours) from annual data
-            # Find the day with the MAXIMUM peak heating demand
-            num_days = len(normalized) // 24
+            # Find the day with the MAXIMUM peak heating demand using RAW values
+            num_days = len(vals) // 24
             max_peak = -1
             peak_day_index = 0
             
             for day in range(num_days):
                 day_start = day * 24
                 day_end = day_start + 24
-                day_peak = max(normalized[day_start:day_end])
+                day_peak = max(vals[day_start:day_end])
                 if day_peak > max_peak:
                     max_peak = day_peak
                     peak_day_index = day
@@ -711,16 +763,25 @@ def load_network_from_vicus(filepath):
             start_hour = peak_day_index * 24
             end_hour = start_hour + 24
             
-            if len(normalized) >= end_hour:
-                daily_profile = normalized[start_hour:end_hour]
+            if len(vals) >= end_hour:
+                daily_profile_raw = vals[start_hour:end_hour]
                 print(f"Found peak day: day {peak_day_index+1} (hours {start_hour}-{end_hour-1}) with peak={max_peak:.4f}")
             else:
                 # Fallback: take first 24 hours if file is shorter than expected
-                daily_profile = normalized[:24] if len(normalized) >= 24 else normalized
+                daily_profile_raw = vals[:24] if len(vals) >= 24 else vals
+                max_peak = max(daily_profile_raw) if daily_profile_raw else 1.0
                 print(f"Using first 24 hours as representative day")
             
-            real_profiles = [resample_vector(daily_profile, STEPS_PER_HOUR)]
+            # NOW normalize the representative day
+            normalized_daily = [v / max_peak if max_peak > 0 else 0 for v in daily_profile_raw]
+            
+            # Resample for the simulation resolution
+            resampled = resample_vector(normalized_daily, STEPS_PER_HOUR)
+            real_profiles = [resampled]
             print(f"Force-selected profile: {target_filename} (peak day extraction, resampled to {len(real_profiles[0])} steps)")
+            
+            # Save a plot of the peak day profile for verification
+            plot_peak_day(resampled, "output/peak_day_profile.png")
     
     # Fallback if specific file failed
     if not real_profiles:
@@ -824,20 +885,125 @@ def plot_simultaneity_curve(relevant_edges, output_path, title="Simultaneity Fac
     finally:
         plt.close()
 
+def plot_peak_load_comparison(consumers, output_path):
+    """
+    Plot Peak Load vs Consumer ID (Original vs Shifted) 
+    to verify that interpolation preserves the peak magnitude.
+    """
+    print(f"Generating peak load verification plot: {output_path}")
+    
+    # Sort consumers by ID for a consistent x-axis
+    sorted_consumers = sorted(consumers, key=lambda x: str(x.id))
+    
+    c_ids = [str(c.id) for c in sorted_consumers]
+    original_peaks = []
+    shifted_peaks = []
+    
+    for c in sorted_consumers:
+        # Original peak (scaled by peak_load)
+        orig_p = c.peak_load * max(c.base_profile)
+        # Shifted peak (from the high-res pre-calculated profile)
+        shift_p = max(c.get_shifted_profile())
+        
+        original_peaks.append(orig_p)
+        shifted_peaks.append(shift_p)
+        
+    plt.figure(figsize=(12, 6))
+    
+    x = range(len(c_ids))
+    plt.plot(x, original_peaks, 'o-', color='blue', label='Original Peak Load', alpha=0.6, markersize=4)
+    plt.plot(x, shifted_peaks, 'x--', color='red', label='Shifted Peak Load (Interpolated)', alpha=0.9, markersize=4)
+    
+    plt.xticks(x, c_ids, rotation=45, fontsize=8)
+    plt.xlabel("Consumer ID")
+    plt.ylabel("Peak Load [W or scaled]")
+    plt.title("Peak Load Verification: Original vs. Interpolated Shift")
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    try:
+        plt.savefig(output_path, dpi=300)
+        print("Saved.")
+    except Exception as e:
+        print(f"Error saving verification plot: {e}")
+    finally:
+        plt.close()
+
+def plot_profile_verification(consumers, output_path, num_to_plot=3):
+    """
+    Plot the 24h profile of selected consumers before and after shifting 
+    to verify shape preservation and correct horizontal shifting.
+    """
+    print(f"Generating profile shift verification plot: {output_path}")
+    
+    # Pick a few representative consumers (first few by ID)
+    selected = sorted(consumers, key=lambda x: str(x.id))[:num_to_plot]
+    
+    if not selected: return
+    
+    fig, axes = plt.subplots(len(selected), 1, figsize=(12, 5 * len(selected)), sharex=True)
+    if len(selected) == 1: axes = [axes]
+    
+    profile_len = len(selected[0].base_profile)
+    hours = [i / STEPS_PER_HOUR for i in range(profile_len)]
+    
+    for i, c in enumerate(selected):
+        orig = vec_scale(c.base_profile, c.peak_load)
+        shifted = c.get_shifted_profile()
+        
+        # Find peak positions for markers
+        orig_peak_idx = orig.index(max(orig))
+        shifted_peak_idx = shifted.index(max(shifted))
+        
+        orig_peak_h = orig_peak_idx / STEPS_PER_HOUR
+        shifted_peak_h = shifted_peak_idx / STEPS_PER_HOUR
+        
+        ax = axes[i]
+        ax.plot(hours, orig, label=f"Original Profile", color='gray', alpha=0.5, linestyle='--')
+        ax.plot(hours, shifted, label=f"Shifted Profile", color='blue', alpha=0.9, linewidth=2)
+        
+        # Vertical markers for peak visual verification
+        ax.axvline(x=orig_peak_h, color='gray', linestyle=':', alpha=0.6, label=f"Orig Peak @ {orig_peak_h:.2f}h")
+        ax.axvline(x=shifted_peak_h, color='red', linestyle='--', alpha=0.8, label=f"Shifted Peak @ {shifted_peak_h:.2f}h")
+        
+        ax.set_ylabel("Load [W]")
+        ax.legend(loc='upper right', fontsize='small')
+        ax.grid(True, alpha=0.2)
+        
+        # Explicit title showing the delta
+        calc_shift = shifted_peak_h - orig_peak_h
+        # Handle wrap around calculation for the title display
+        if calc_shift > 12: calc_shift -= 24
+        if calc_shift < -12: calc_shift += 24
+        
+        ax.set_title(f"Consumer {c.id}: Shift = {c.time_shift/STEPS_PER_HOUR:+.2f}h (Visual Peak Move: {calc_shift:+.2f}h)")
+        
+    axes[-1].set_xlabel("Hour of Day")
+    plt.tight_layout()
+    
+    try:
+        plt.savefig(output_path, dpi=200)
+        print("Saved.")
+    except Exception as e:
+        print(f"Error saving profile verification plot: {e}")
+    finally:
+        plt.close()
+
 def main():
     start_time = time.time()
     filepath = sys.argv[1] if len(sys.argv) > 1 else None
+    # Allow optional second argument for output directory
+    output_dir = sys.argv[2] if len(sys.argv) > 2 else "output"
     
     if filepath and os.path.exists(filepath):
         net, relevant_edges = load_network_from_vicus(filepath)
     else:
-       print("No valid input file provided.")
+       print("Usage: python3 time_shift_calculations.py <vicus_file> [output_dir]")
        return
     
     if not relevant_edges: return
 
-    # Prepare Output Dir
-    output_dir = "output"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
@@ -863,12 +1029,12 @@ def main():
     if shifts:
         print(f"\nShifts: Min={min(shifts)/STEPS_PER_HOUR}h, Max={max(shifts)/STEPS_PER_HOUR}h")
         print("\n--- INDIVIDUAL SHIFTS ---")
-        print(f"{'Consumer ID':<15} | {'Shift (Hours)':<15}")
-        print("-" * 35)
+        print(f"{'Consumer ID':<15} | {'Shift (h)':<10}")
+        print("-" * 65)
         sorted_consumers = sorted(net.consumers, key=lambda x: int(x.id) if str(x.id).isdigit() else str(x.id))
         
         for c in sorted_consumers:
-             print(f"{str(c.id):<15} | {c.time_shift/STEPS_PER_HOUR:<15.2f}")
+            print(f"{str(c.id):<15} | {c.time_shift/STEPS_PER_HOUR:<10.2f}")
 
     print(f"\nElapsed time: {time.time() - start_time:.2f}s")
     
@@ -878,6 +1044,14 @@ def main():
     # Plot Simultaneity Curve
     output_curve = os.path.join(output_dir, f"simultaneity_curve_{base_name_no_ext}.png")
     plot_simultaneity_curve(relevant_edges, output_curve)
+
+    # Plot Peak Load Verification (requested by user)
+    output_verify = os.path.join(output_dir, f"peak_verification_{base_name_no_ext}.png")
+    plot_peak_load_comparison(net.consumers, output_verify)
+
+    # Plot Profile Shift Verification (requested by user)
+    output_shift_verify = os.path.join(output_dir, f"profile_shift_verification_{base_name_no_ext}.png")
+    plot_profile_verification(net.consumers, output_shift_verify)
 
 if __name__ == "__main__":
     main()
