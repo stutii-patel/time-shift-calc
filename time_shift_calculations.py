@@ -346,6 +346,8 @@ def run_coordinate_descent_phase(network, relevant_edges, shift_increments, max_
                 # Calculate hypothetical error without modifying edges
                 hypothetical_error = 0
                 for edge in affected_edges:
+
+                    # current total load, old time shift and new time shift
                     hypothetical_agg = [
                         c - o + n 
                         for c, o, n in zip(edge.current_aggregated_profile, original_profile, new_profile)
