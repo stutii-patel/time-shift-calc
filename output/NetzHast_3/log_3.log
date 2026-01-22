@@ -1,0 +1,294 @@
+Loading VICUS file: data/test_scenarios/complex/NetzHast.vicus
+Parsed Simultaneity Spline: 63 points.
+data/test_scenarios/complex/NetzHast.vicus
+Found peak day: day 24 (hours 552-575) with peak=7400.0000
+Force-selected profile: Residential_SingleFamily_HeatingLoad.tsv (peak day extraction, resampled to 96 steps)
+Peak day profile plot saved to output/peak_day_profile.png
+Created 39 consumers and 93 relevant optimization edges.
+Generating visualization: output/NetzHast_3/visualization_NetzHast_initial.png
+Saved.
+
+--- BEFORE ---
+1566->1606: Cons=39 Target=0.8016, Actual=1.0000
+1606->1642: Cons=9 Target=0.9783, Actual=1.0000
+1606->1717: Cons=30 Target=0.8560, Actual=1.0000
+1642->1648: Cons=8 Target=0.9824, Actual=1.0000
+1642->1551: Cons=1 Target=1.0000, Actual=1.0000
+1717->1700: Cons=1 Target=1.0000, Actual=1.0000
+1717->1732: Cons=29 Target=0.8623, Actual=1.0000
+1648->1669: Cons=7 Target=0.9862, Actual=1.0000
+1648->1553: Cons=1 Target=1.0000, Actual=1.0000
+1732->1626: Cons=28 Target=0.8686, Actual=1.0000
+
+================================================================================
+MULTI-START ADAPTIVE HILL CLIMBING
+================================================================================
+Consumers: 39
+Edges: 93
+Restarts: 5
+================================================================================
+
+Profile length: 96 timesteps (24.0h)
+Max shift: ±12 timesteps (±3.0h)
+
+
+────────────────────────────────────────────────────────────────────────────────
+RESTART 1/5
+────────────────────────────────────────────────────────────────────────────────
+Initialization: Zero shifts (baseline)
+Initial error: 0.143167
+
+  Phase 1: Coarse search (±12 timesteps)
+    Iteration 1: Error = 0.033449
+    Iteration 2: Error = 0.024144
+    Iteration 3: Error = 0.023483
+    Iteration 4: Error = 0.023477
+    Iteration 5: Error = 0.023477
+    Converged (no improvement)
+
+  Phase 2: Medium search (±6 timesteps)
+    Iteration 1: Error = 0.006500
+    Iteration 2: Error = 0.005221
+    Iteration 3: Error = 0.004013
+    Iteration 4: Error = 0.003928
+    Iteration 5: Error = 0.003915
+    Iteration 6: Error = 0.003913
+    Iteration 7: Error = 0.003911
+    Iteration 8: Error = 0.003910
+    Iteration 9: Error = 0.003910
+    Converged (no improvement)
+
+  Phase 3: Fine-tuning (±1.0 timesteps = ±0.25h)
+    Iteration 1: Error = 0.001630
+    Iteration 2: Error = 0.001164
+    Iteration 3: Error = 0.001147
+    Iteration 4: Error = 0.001147
+    Converged (no improvement)
+
+  Final error: 0.001147 (improvement: 0.142020)
+  ★ NEW BEST SOLUTION ★
+
+────────────────────────────────────────────────────────────────────────────────
+RESTART 2/5
+────────────────────────────────────────────────────────────────────────────────
+Initialization: Random shifts in range ±3.0h
+Initial error: 1.263148
+
+  Phase 1: Coarse search (±12 timesteps)
+    Iteration 1: Error = 0.042200
+    Iteration 2: Error = 0.016995
+    Iteration 3: Error = 0.007770
+    Iteration 4: Error = 0.007764
+    Iteration 5: Error = 0.007764
+    Iteration 6: Error = 0.007764
+    Converged (no improvement)
+
+  Phase 2: Medium search (±6 timesteps)
+    Iteration 1: Error = 0.003002
+    Iteration 2: Error = 0.002238
+    Iteration 3: Error = 0.002179
+    Iteration 4: Error = 0.002149
+    Iteration 5: Error = 0.002148
+    Iteration 6: Error = 0.002147
+    Iteration 7: Error = 0.002146
+    Iteration 8: Error = 0.002146
+    Converged (no improvement)
+
+  Phase 3: Fine-tuning (±1.0 timesteps = ±0.25h)
+    Iteration 1: Error = 0.001695
+    Iteration 2: Error = 0.001691
+    Iteration 3: Error = 0.001688
+    Iteration 4: Error = 0.001688
+    Iteration 5: Error = 0.001687
+    Iteration 6: Error = 0.001687
+    Iteration 7: Error = 0.001687
+    Iteration 8: Error = 0.001687
+    Converged (no improvement)
+
+  Final error: 0.001687 (improvement: 1.261461)
+
+────────────────────────────────────────────────────────────────────────────────
+RESTART 3/5
+────────────────────────────────────────────────────────────────────────────────
+Initialization: Random shifts in range ±3.0h
+Initial error: 2.531359
+
+  Phase 1: Coarse search (±12 timesteps)
+    Iteration 1: Error = 0.098481
+    Iteration 2: Error = 0.013406
+    Iteration 3: Error = 0.013406
+    Converged (no improvement)
+
+  Phase 2: Medium search (±6 timesteps)
+    Iteration 1: Error = 0.003261
+    Iteration 2: Error = 0.002576
+    Iteration 3: Error = 0.001969
+    Iteration 4: Error = 0.001924
+    Iteration 5: Error = 0.001921
+    Iteration 6: Error = 0.001920
+    Iteration 7: Error = 0.001919
+    Iteration 8: Error = 0.001919
+    Converged (no improvement)
+
+  Phase 3: Fine-tuning (±1.0 timesteps = ±0.25h)
+    Iteration 1: Error = 0.000710
+    Iteration 2: Error = 0.000667
+    Iteration 3: Error = 0.000555
+    Iteration 4: Error = 0.000539
+    Iteration 5: Error = 0.000536
+    Iteration 6: Error = 0.000534
+    Iteration 7: Error = 0.000533
+    Iteration 8: Error = 0.000533
+    Converged (no improvement)
+
+  Final error: 0.000533 (improvement: 2.530826)
+  ★ NEW BEST SOLUTION ★
+
+────────────────────────────────────────────────────────────────────────────────
+RESTART 4/5
+────────────────────────────────────────────────────────────────────────────────
+Initialization: Random shifts in range ±3.0h
+Initial error: 3.050665
+
+  Phase 1: Coarse search (±12 timesteps)
+    Iteration 1: Error = 0.143307
+    Iteration 2: Error = 0.035560
+    Iteration 3: Error = 0.029229
+    Iteration 4: Error = 0.021044
+    Iteration 5: Error = 0.008466
+    Iteration 6: Error = 0.008466
+    Converged (no improvement)
+
+  Phase 2: Medium search (±6 timesteps)
+    Iteration 1: Error = 0.002708
+    Iteration 2: Error = 0.002314
+    Iteration 3: Error = 0.002258
+    Iteration 4: Error = 0.001864
+    Iteration 5: Error = 0.001863
+    Iteration 6: Error = 0.001862
+    Iteration 7: Error = 0.001862
+    Iteration 8: Error = 0.001862
+    Converged (no improvement)
+
+  Phase 3: Fine-tuning (±1.0 timesteps = ±0.25h)
+    Iteration 1: Error = 0.000852
+    Iteration 2: Error = 0.000792
+    Iteration 3: Error = 0.000740
+    Iteration 4: Error = 0.000732
+    Iteration 5: Error = 0.000732
+    Iteration 6: Error = 0.000731
+    Iteration 7: Error = 0.000731
+    Iteration 8: Error = 0.000731
+    Converged (no improvement)
+
+  Final error: 0.000731 (improvement: 3.049934)
+
+────────────────────────────────────────────────────────────────────────────────
+RESTART 5/5
+────────────────────────────────────────────────────────────────────────────────
+Initialization: Random shifts in range ±3.0h
+Initial error: 1.578012
+
+  Phase 1: Coarse search (±12 timesteps)
+    Iteration 1: Error = 0.084076
+    Iteration 2: Error = 0.013750
+    Iteration 3: Error = 0.010173
+    Iteration 4: Error = 0.010168
+    Iteration 5: Error = 0.010168
+    Converged (no improvement)
+
+  Phase 2: Medium search (±6 timesteps)
+    Iteration 1: Error = 0.005960
+    Iteration 2: Error = 0.004179
+    Iteration 3: Error = 0.003278
+    Iteration 4: Error = 0.002242
+    Iteration 5: Error = 0.001801
+    Iteration 6: Error = 0.001765
+    Iteration 7: Error = 0.001765
+    Converged (no improvement)
+
+  Phase 3: Fine-tuning (±1.0 timesteps = ±0.25h)
+    Iteration 1: Error = 0.001053
+    Iteration 2: Error = 0.000970
+    Iteration 3: Error = 0.000701
+    Iteration 4: Error = 0.000690
+    Iteration 5: Error = 0.000688
+    Iteration 6: Error = 0.000687
+    Iteration 7: Error = 0.000686
+    Iteration 8: Error = 0.000686
+    Converged (no improvement)
+
+  Final error: 0.000686 (improvement: 1.577326)
+
+================================================================================
+OPTIMIZATION COMPLETE
+================================================================================
+Best error: 0.000533
+Applying best solution...
+
+--- AFTER ---
+1566->1606: Cons=39 Target=0.8016, Actual=0.8066
+1606->1642: Cons=9 Target=0.9783, Actual=0.9766
+1606->1717: Cons=30 Target=0.8560, Actual=0.8619
+1642->1648: Cons=8 Target=0.9824, Actual=0.9819
+1642->1551: Cons=1 Target=1.0000, Actual=1.0000
+1717->1700: Cons=1 Target=1.0000, Actual=1.0000
+1717->1732: Cons=29 Target=0.8623, Actual=0.8619
+1648->1669: Cons=7 Target=0.9862, Actual=0.9852
+1648->1553: Cons=1 Target=1.0000, Actual=1.0000
+1732->1626: Cons=28 Target=0.8686, Actual=0.8620
+
+Shifts: Min=-3.0h, Max=3.0h
+
+--- INDIVIDUAL SHIFTS ---
+Consumer ID     | Shift (h) 
+-----------------------------------------------------------------
+1542            | 0.75      
+1543            | 0.75      
+1544            | 0.75      
+1545            | -2.25     
+1546            | 1.50      
+1547            | 2.25      
+1548            | 1.50      
+1549            | 1.25      
+1550            | 1.00      
+1551            | 1.50      
+1552            | 1.75      
+1553            | 1.75      
+1554            | 2.50      
+1555            | 0.05      
+1556            | -0.75     
+1557            | 0.75      
+1558            | -1.00     
+1559            | -0.50     
+1560            | 1.95      
+1561            | 1.30      
+1562            | 0.00      
+1563            | 1.00      
+1564            | 0.00      
+1685            | -1.00     
+1686            | -0.25     
+1699            | -3.00     
+1700            | 3.00      
+1701            | 3.00      
+1702            | 3.00      
+1703            | 3.00      
+1704            | 3.00      
+1705            | 3.00      
+1706            | 2.50      
+1707            | -2.50     
+1708            | -3.00     
+1709            | -0.75     
+1710            | -0.75     
+1711            | 3.00      
+1712            | 0.50      
+
+Elapsed time: 3.34s
+Generating visualization: output/NetzHast_3/visualization_NetzHast_final.png
+Saved.
+Generating simultaneity curve: output/NetzHast_3/simultaneity_curve_NetzHast.png
+Saved.
+Generating peak load verification plot: output/NetzHast_3/peak_verification_NetzHast.png
+Saved.
+Generating profile shift verification plot: output/NetzHast_3/profile_shift_verification_NetzHast.png
+Saved.
