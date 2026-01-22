@@ -149,6 +149,7 @@ class Consumer:
             idx0 = int(math.floor(pos))
             idx1 = (idx0 + 1) % self.n_base
             frac = pos - idx0
+            # val = frac×(b−a) + a
             val = scaled_profile[idx0] * (1 - frac) + scaled_profile[idx1] * frac
             self.high_res_profile.append(val)
             
