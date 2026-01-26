@@ -136,6 +136,7 @@ class Consumer:
         self.peak_load = peak_load
         self.base_profile = base_profile
         self.time_shift = 0 
+        self.partial_load_ratio = 1.0 # Default to full load
         
         # Pre-calculate high-resolution scaled profile for efficient fractional shifts
         # This handles the "one time calculation" requirement.
@@ -210,6 +211,23 @@ class Edge:
             return 1.0
         peak_agg = max(self.current_aggregated_profile)
         return peak_agg / self.sum_individual_peaks
+
+    def calculate_steady_state_simultaneity(self):
+        """
+        Calculate simultaneity based on partial load ratios.
+        g = Sum(r_i * Q_max_i) / Sum(Q_max_i)
+        """
+        if self.n_consumers <= 1 or self.sum_individual_peaks == 0:
+            return 1.0
+        
+        weighted_sum = sum(c.partial_load_ratio * c.peak_load for c in self.downstream_consumers)
+        
+        # Note: sum_individual_peaks is essentially Sum(Q_max_i) if base_profile max is 1.0
+        # For safety, let's recalculate the denominator purely based on peak_load
+        denominator = sum(c.peak_load for c in self.downstream_consumers)
+        
+        if denominator == 0: return 1.0
+        return weighted_sum / denominator
 
     def update_profile(self, old_consumer_profile, new_consumer_profile):
         if not self.downstream_consumers: return
@@ -991,68 +1009,483 @@ def plot_profile_verification(consumers, output_path, num_to_plot=3):
     finally:
         plt.close()
 
+def optimize_steady_state_load_ratios(network, relevant_edges, learning_rate=0.01, iterations=2000, lambda_reg=0.01):
+    """
+    Optimize partial load ratios (r_i) for each consumer to match target simultaneity.
+    Objective: Minimize Sum(w_e * (g_achieved_e - g_target_e)^2) + lambda * Sum((r_i - 1)^2)
+    Algorithm: Gradient Descent with projection
+    """
+    print(f"\n{'='*80}")
+    print(f"STEADY-STATE OPTIMIZATION (PARTIAL LOADS)")
+    print(f"{'='*80}")
+    
+    # Initialize ratios (optional, currently they start at 1.0)
+    for c in network.consumers:
+        c.partial_load_ratio = 1.0
+        
+    initial_error = 0
+    for edge in relevant_edges:
+        if edge.n_consumers <= 1: continue # Skip leaf edges
+        g_act = edge.calculate_steady_state_simultaneity()
+        g_tgt = edge.get_target_simultaneity()
+        w_e = edge.n_consumers**2 # TODO
+        initial_error += w_e * (g_act - g_tgt)**2
+        
+    print(f"Initial Error (Load Ratios = 1.0): {initial_error:.6f}")
+    
+    # Calculate average target simultaneity for adaptive regularization
+    main_edges = [e for e in relevant_edges if e.n_consumers > 1]
+    if main_edges:
+        avg_target_sim = sum(e.get_target_simultaneity() for e in main_edges) / len(main_edges)
+    else:
+        avg_target_sim = 0.7
+    
+    print(f"Average target simultaneity: {avg_target_sim:.4f} (using as regularization target)")
+    
+    best_obj = initial_error
+    best_ratios = [c.partial_load_ratio for c in network.consumers]
+    no_improvement_count = 0
+    
+    for it in range(iterations):
+        gradients = {c.id: 0.0 for c in network.consumers}
+        current_error = 0
+        
+        # 1. Calculate Gradients
+        edges_processed = 0
+        for edge in relevant_edges:
+            if edge.n_consumers <= 1: continue # Skip leaf edges as per task specs
+            edges_processed += 1
+            
+            g_act = edge.calculate_steady_state_simultaneity()
+            g_tgt = edge.get_target_simultaneity()
+            
+            diff = g_act - g_tgt
+            w_e = edge.n_consumers**2
+            
+            current_error += w_e * diff**2
+            
+            denominator = sum(c.peak_load for c in edge.downstream_consumers)
+            if denominator == 0: continue
+            
+            factor = 2 * w_e * diff / denominator
+            
+            for c in edge.downstream_consumers:
+                gradients[c.id] += factor * c.peak_load
+        
+
+                
+        # Add regularization gradient and error
+        reg_error = 0
+        for c in network.consumers:
+            deviation = c.partial_load_ratio - avg_target_sim
+            regularization = 2 * lambda_reg * deviation
+            gradients[c.id] += regularization
+            reg_error += lambda_reg * deviation**2
+            
+        total_obj = current_error + reg_error
+        
+        # Adaptive learning rate using gradient normalization
+        # Instead of scaling by 1/max_grad, normalize all gradients and use fixed step size
+        grad_values = [abs(g) for g in gradients.values()]
+        if grad_values:
+            # Use RMS (root mean square) of gradients for normalization
+            rms_grad = (sum(g**2 for g in grad_values) / len(grad_values)) ** 0.5
+            if rms_grad > 1e-10:
+                # Normalize gradients to have unit RMS, then scale by learning rate
+                grad_scale = 1.0 / rms_grad
+                adaptive_lr = learning_rate * grad_scale
+            else:
+                adaptive_lr = learning_rate
+        else:
+            adaptive_lr = learning_rate
+        
+        if it % 200 == 0:
+            print(f"  Iteration {it}: Objective = {total_obj:.6f} (Fit: {current_error:.6f}, Reg: {reg_error:.6f}) | LR: {adaptive_lr:.6f}")
+            
+        # 2. Update Ratios with Projection
+        max_change = 0
+        for c in network.consumers:
+            old_r = c.partial_load_ratio
+            new_r = old_r - adaptive_lr * gradients[c.id]
+            
+            # Constraints: 0.05 <= r <= 1.0
+            new_r = max(0.05, min(1.0, new_r))
+            
+            c.partial_load_ratio = new_r
+            max_change = max(max_change, abs(new_r - old_r))
+        
+        # Track best solution
+        if total_obj < best_obj:
+            best_obj = total_obj
+            best_ratios = [c.partial_load_ratio for c in network.consumers]
+            no_improvement_count = 0
+        else:
+            no_improvement_count += 1
+        
+        # Early stopping if no improvement for 100 iterations
+        if no_improvement_count > 100:
+            print(f"  Early stopping at iteration {it} (no improvement for 100 iterations)")
+            break
+
+            
+        if max_change < 1e-6:
+            print(f"  Converged at iteration {it}")
+            break
+    
+    # Apply best solution
+    for i, c in enumerate(network.consumers):
+        c.partial_load_ratio = best_ratios[i]
+            
+    print(f"Final Error: {best_obj:.6f}")
+    
+    # --- Results Table ---
+    print(f"\n{'='*70}")
+    print(f"{'Edge ID':<20} | {'n_e':<5} | {'Target g(n)':<12} | {'Achieved g':<12} | {'Deviation':<10}")
+    print(f"{'-'*70}")
+    
+    # Sort edges by number of consumers (descending) for better readability
+    sorted_edges = sorted(relevant_edges, key=lambda e: e.n_consumers, reverse=True)
+    
+    for edge in sorted_edges:
+        # Skip leaf edges for the report if there are too many, or just show all
+        # Showing all for now as requested
+        g_act = edge.calculate_steady_state_simultaneity()
+        g_tgt = edge.get_target_simultaneity()
+        dev = g_act - g_tgt
+        
+        print(f"{edge.id:<20} | {edge.n_consumers:<5} | {g_tgt:<12.4f} | {g_act:<12.4f} | {dev:<10.4f}")
+    
+    print(f"{'='*70}\n")
+    
+    return total_obj
+
+def plot_steady_state_verification(relevant_edges, output_path):
+    """
+    Verification plot: Target vs Achieved Simultaneity
+    Shows how well the optimization matched the target values
+    """
+    print(f"Generating steady-state verification plot: {output_path}")
+    
+    # Filter non-leaf edges
+    opt_edges = [e for e in relevant_edges if e.n_consumers > 1]
+    
+    if not opt_edges:
+        print("No edges to plot.")
+        return
+    
+    # Collect data
+    n_consumers = []
+    target_sim = []
+    achieved_sim = []
+    edge_weights = []
+    
+    for edge in opt_edges:
+        n_consumers.append(edge.n_consumers)
+        target_sim.append(edge.get_target_simultaneity())
+        achieved_sim.append(edge.calculate_steady_state_simultaneity())
+        edge_weights.append(edge.n_consumers**2)  # Weight for sizing
+    
+    # Normalize weights for marker sizes
+    max_weight = max(edge_weights) if edge_weights else 1
+    marker_sizes = [100 + 400 * (w / max_weight) for w in edge_weights]
+    
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
+    
+    # Plot 1: Target vs Achieved (scatter)
+    ax1.scatter(target_sim, achieved_sim, s=marker_sizes, alpha=0.6, c=n_consumers, 
+                cmap='viridis', edgecolors='black', linewidth=1)
+    
+    # Perfect match line
+    min_val = min(min(target_sim), min(achieved_sim))
+    max_val = max(max(target_sim), max(achieved_sim))
+    ax1.plot([min_val, max_val], [min_val, max_val], 'r--', linewidth=2, 
+             label='Perfect Match', alpha=0.7)
+    
+    ax1.set_xlabel('Target Simultaneity g(n)', fontsize=12)
+    ax1.set_ylabel('Achieved Simultaneity', fontsize=12)
+    ax1.set_title('Steady-State Optimization: Target vs Achieved\n(Marker size = edge weight)', 
+                  fontsize=13, fontweight='bold')
+    ax1.grid(True, alpha=0.3)
+    ax1.legend()
+    
+    # Add colorbar
+    sm = plt.cm.ScalarMappable(cmap='viridis', 
+                               norm=plt.Normalize(vmin=min(n_consumers), vmax=max(n_consumers)))
+    sm.set_array([])
+    cbar1 = plt.colorbar(sm, ax=ax1)
+    cbar1.set_label('Number of Consumers (n_e)', fontsize=10)
+    
+    # Plot 2: Deviation by number of consumers
+    deviations = [a - t for a, t in zip(achieved_sim, target_sim)]
+    
+    ax2.scatter(n_consumers, deviations, s=marker_sizes, alpha=0.6, c=n_consumers,
+                cmap='viridis', edgecolors='black', linewidth=1)
+    ax2.axhline(y=0, color='r', linestyle='--', linewidth=2, label='Zero Deviation', alpha=0.7)
+    
+    ax2.set_xlabel('Number of Downstream Consumers (n_e)', fontsize=12)
+    ax2.set_ylabel('Deviation (Achieved - Target)', fontsize=12)
+    ax2.set_title('Deviation from Target by Edge Size\n(Positive = above target)', 
+                  fontsize=13, fontweight='bold')
+    ax2.grid(True, alpha=0.3)
+    ax2.legend()
+    
+    # Add statistics text
+    mean_abs_dev = sum(abs(d) for d in deviations) / len(deviations)
+    max_abs_dev = max(abs(d) for d in deviations)
+    stats_text = f'Mean |Deviation|: {mean_abs_dev:.4f}\nMax |Deviation|: {max_abs_dev:.4f}'
+    ax2.text(0.02, 0.98, stats_text, transform=ax2.transAxes, 
+             fontsize=10, verticalalignment='top',
+             bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+    
+    plt.tight_layout()
+    
+    try:
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        print(f"Saved verification plot.")
+    except Exception as e:
+        print(f"Error saving plot: {e}")
+    finally:
+        plt.close()
+
+def visualize_steady_state(net, relevant_edges, output_path, title="Steady-State Simultaneity"):
+    print(f"Generating visualization: {output_path}")
+    
+    # Decide which graph to plot
+    if net.G_nx:
+        G_vis = net.G_nx
+    else:
+        G_vis = nx.DiGraph()
+        for edge in relevant_edges:
+            try:
+                if "->" in edge.id:
+                    u, v = edge.id.split("->")
+                    G_vis.add_edge(u, v)
+            except ValueError:
+                pass
+    
+    if len(G_vis.nodes()) == 0:
+        return
+
+    # Map relevant edges
+    edge_obj_map = {e.id: e for e in relevant_edges}
+    
+    # Collect simultaneity values
+    sim_values = []
+    for u, v in G_vis.edges():
+        eid = f"{u}->{v}"
+        if eid in edge_obj_map:
+            sim = edge_obj_map[eid].calculate_steady_state_simultaneity()
+            sim_values.append(sim)
+            
+    vmin = min(sim_values) if sim_values else 0.5
+    vmax = max(sim_values) if sim_values else 1.0
+    if vmax - vmin < 0.01:
+        vmin = vmin - 0.05
+        vmax = vmax + 0.05
+        
+    norm = plt.Normalize(vmin=vmin, vmax=vmax)
+    cmap = plt.cm.viridis # Different colormap to distinguish from dynamic analysis
+    
+    # Edge colors/widths
+    full_edge_colors = []
+    full_edge_widths = []
+    for u, v in G_vis.edges():
+        eid = f"{u}->{v}"
+        if eid in edge_obj_map:
+            sim = edge_obj_map[eid].calculate_steady_state_simultaneity()
+            full_edge_colors.append(cmap(norm(sim)))
+            full_edge_widths.append(5.0)
+        else:
+            full_edge_colors.append((0.5, 0.5, 0.5, 0.9))
+            full_edge_widths.append(3.0)
+
+    # Positions
+    pos = net.pos
+    relevant_pos = {n: pos[n] for n in G_vis.nodes() if n in pos}
+    if len(relevant_pos) < len(G_vis.nodes()):
+        relevant_pos = nx.kamada_kawai_layout(G_vis, scale=2.0)
+    else:
+        # Scale existing positions
+        xs = [p[0] for p in relevant_pos.values()]
+        ys = [p[1] for p in relevant_pos.values()]
+        x_range = max(xs) - min(xs) if xs else 1
+        y_range = max(ys) - min(ys) if ys else 1
+        scale_factor = 2.0 / max(x_range, y_range, 1)
+        relevant_pos = {n: (p[0] * scale_factor, p[1] * scale_factor) for n, p in relevant_pos.items()}
+        
+    plt.figure(figsize=(16, 12))
+    
+    nx.draw_networkx_edges(
+        G_vis, relevant_pos, 
+        edge_color=full_edge_colors, 
+        width=full_edge_widths,
+        arrows=False, alpha=0.9
+    )
+    
+    if sim_values:
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=plt.gca(), label='Steady-State Simultaneity', shrink=0.8)
+    
+    # Edge Labels
+    edge_labels = {}
+    consumer_map = {str(c.id): c for c in net.consumers}
+    for u, v in G_vis.edges():
+        eid = f"{u}->{v}"
+        if eid in edge_obj_map:
+            e = edge_obj_map[eid]
+            sim = e.calculate_steady_state_simultaneity()
+            edge_labels[(u, v)] = f"g={sim:.3f}\nn={e.n_consumers}"
+        elif str(u) in consumer_map:
+             edge_labels[(u, v)] = f"g=1.000\nn=1"
+             
+    nx.draw_networkx_edge_labels(
+        G_vis, relevant_pos, edge_labels=edge_labels, 
+        font_size=8, font_color='darkgreen',
+        bbox=dict(boxstyle='round,pad=0.3', facecolor='white', edgecolor='green', alpha=0.9)
+    )
+
+    # Node Labels (show Partial Load Ratio)
+    node_labels = {}
+    node_colors = []
+    node_sizes = []
+    
+    for n in G_vis.nodes():
+        n_type = G_vis.nodes[n].get('type', 'Unknown')
+        if n in consumer_map:
+            ratio = consumer_map[n].partial_load_ratio
+            node_labels[n] = f"{n}\nr={ratio:.2f}"
+            node_colors.append('#F1C40F') # Yellow/Gold
+            node_sizes.append(800)
+        elif n_type == 'Source':
+            node_labels[n] = f"SOURCE\n{n}"
+            node_colors.append('#E74C3C')
+            node_sizes.append(1500)
+        elif n_type == 'Mixer':
+            node_labels[n] = f"{n}"
+            node_colors.append('#95A5A6')
+            node_sizes.append(300)
+        else:
+            node_labels[n] = f"{n}"
+            node_colors.append('#BDC3C7')
+            node_sizes.append(400)
+
+    nx.draw_networkx_nodes(G_vis, relevant_pos, node_size=node_sizes, node_color=node_colors, edgecolors='black')
+    nx.draw_networkx_labels(G_vis, relevant_pos, labels=node_labels, font_size=8, font_weight='bold')
+
+    plt.title(f"{title}\nEdge Labels: g=Simul, n=Consumers | Node Labels: r=Partial Load Ratio", fontsize=14)
+    plt.axis('off')
+    plt.tight_layout()
+    try:
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        print("Saved.")
+    except Exception as e:
+        print(f"Error saving plot: {e}")
+    finally:
+        plt.close()
+
 def main():
     start_time = time.time()
-    filepath = sys.argv[1] if len(sys.argv) > 1 else None
+    if len(sys.argv) < 2:
+        print("Usage: python3 time_shift_calculations.py <vicus_file> [output_dir]")
+        return
+        
+    filepath = sys.argv[1]
     # Allow optional second argument for output directory
     output_dir = sys.argv[2] if len(sys.argv) > 2 else "output"
     
-    if filepath and os.path.exists(filepath):
-        net, relevant_edges = load_network_from_vicus(filepath)
-    else:
-       print("Usage: python3 time_shift_calculations.py <vicus_file> [output_dir]")
-       return
+    if not os.path.exists(filepath):
+        print(f"File not found: {filepath}")
+        return
+        
+    net, relevant_edges = load_network_from_vicus(filepath)
     
     if not relevant_edges: return
 
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    # --- Setup Directories ---
+    dynamic_output_dir = os.path.join(output_dir, "dynamic")
+    steady_output_dir = os.path.join(output_dir, "steady_state")
+    
+    os.makedirs(dynamic_output_dir, exist_ok=True)
+    os.makedirs(steady_output_dir, exist_ok=True)
         
     base_name = os.path.basename(filepath)
     base_name_no_ext = os.path.splitext(base_name)[0]
 
+    # ==========================================
+    # 1. DYNAMIC OPTIMIZATION (Original Task)
+    # ==========================================
+    print("\n" + "#"*30)
+    print(" PHASE 1: DYNAMIC OPTIMIZATION ")
+    print("#"*30)
+
     # Initial Visualization
-    output_vis_initial = os.path.join(output_dir, f"visualization_{base_name_no_ext}_initial.png")
+    output_vis_initial = os.path.join(dynamic_output_dir, f"visualization_{base_name_no_ext}_initial.png")
     visualize_network(net, relevant_edges, output_vis_initial, title="Initial Network State")
 
-    print("\n--- BEFORE ---")
+    print("\n--- BEFORE (Dynamic) ---")
     print_edges = relevant_edges if len(relevant_edges) < 10 else relevant_edges[:10]
     for edge in print_edges:
         print(f"{edge.id}: Cons={edge.n_consumers} Target={edge.get_target_simultaneity():.4f}, Actual={edge.calculate_current_simultaneity():.4f}")
         
     multi_start_adaptive_hill_climbing(net, relevant_edges, num_restarts=5, max_iterations_per_phase=15)
     
-    print("\n--- AFTER ---")
+    print("\n--- AFTER (Dynamic) ---")
     for edge in print_edges:
         print(f"{edge.id}: Cons={edge.n_consumers} Target={edge.get_target_simultaneity():.4f}, Actual={edge.calculate_current_simultaneity():.4f}")
 
     shifts = [c.time_shift for c in net.consumers]
     if shifts:
         print(f"\nShifts: Min={min(shifts)/STEPS_PER_HOUR}h, Max={max(shifts)/STEPS_PER_HOUR}h")
-        print("\n--- INDIVIDUAL SHIFTS ---")
-        print(f"{'Consumer ID':<15} | {'Shift (h)':<10}")
-        print("-" * 65)
-        sorted_consumers = sorted(net.consumers, key=lambda x: int(x.id) if str(x.id).isdigit() else str(x.id))
-        
-        for c in sorted_consumers:
-            print(f"{str(c.id):<15} | {c.time_shift/STEPS_PER_HOUR:<10.2f}")
+        # Print individual shifts only if few consumers or requested explanation
+        if len(net.consumers) < 20: 
+            print("\n--- INDIVIDUAL SHIFTS ---")
+            print(f"{'Consumer ID':<15} | {'Shift (h)':<10}")
+            print("-" * 65)
+            sorted_consumers = sorted(net.consumers, key=lambda x: int(x.id) if str(x.id).isdigit() else str(x.id))
+            for c in sorted_consumers:
+                print(f"{str(c.id):<15} | {c.time_shift/STEPS_PER_HOUR:<10.2f}")
 
-    print(f"\nElapsed time: {time.time() - start_time:.2f}s")
-    
-    output_vis_final = os.path.join(output_dir, f"visualization_{base_name_no_ext}_final.png")
+    output_vis_final = os.path.join(dynamic_output_dir, f"visualization_{base_name_no_ext}_final.png")
     visualize_network(net, relevant_edges, output_vis_final, title="Optimized Network State")
     
     # Plot Simultaneity Curve
-    output_curve = os.path.join(output_dir, f"simultaneity_curve_{base_name_no_ext}.png")
+    output_curve = os.path.join(dynamic_output_dir, f"simultaneity_curve_{base_name_no_ext}.png")
     plot_simultaneity_curve(relevant_edges, output_curve)
 
-    # Plot Peak Load Verification (requested by user)
-    output_verify = os.path.join(output_dir, f"peak_verification_{base_name_no_ext}.png")
+    # Plot Peak Load Verification
+    output_verify = os.path.join(dynamic_output_dir, f"peak_verification_{base_name_no_ext}.png")
     plot_peak_load_comparison(net.consumers, output_verify)
 
-    # Plot Profile Shift Verification (requested by user)
-    output_shift_verify = os.path.join(output_dir, f"profile_shift_verification_{base_name_no_ext}.png")
+    # Plot Profile Shift Verification
+    output_shift_verify = os.path.join(dynamic_output_dir, f"profile_shift_verification_{base_name_no_ext}.png")
     plot_profile_verification(net.consumers, output_shift_verify)
+
+    # ==========================================
+    # 2. STEADY-STATE OPTIMIZATION (New Task)
+    # ==========================================
+    print("\n" + "#"*30)
+    print(" PHASE 2: STEADY-STATE OPTIMIZATION ")
+    print("#"*30)
+    
+    # Reset consumers for steady state (though r_i starts at 1.0 inside the function anyway)
+    # Note: Dynamic shifts don't affect steady state calculation essentially, 
+    # but the classes share the same objects. 
+    # Steady state uses `c.partial_load_ratio`, Dynamic uses `c.time_shift`. They are independent.
+    
+    optimize_steady_state_load_ratios(net, relevant_edges)
+    
+    output_vis_steady = os.path.join(steady_output_dir, f"steady_state_{base_name_no_ext}.png")
+    visualize_steady_state(net, relevant_edges, output_vis_steady, title="Steady-State Partial Load Optimization")
+    
+    # Verification plot
+    output_verify_steady = os.path.join(steady_output_dir, f"verification_{base_name_no_ext}.png")
+    plot_steady_state_verification(relevant_edges, output_verify_steady)
+
+    print(f"\nElapsed time: {time.time() - start_time:.2f}s")
+    print(f"Dynamic results saved to: {dynamic_output_dir}")
+    print(f"Steady-state results saved to: {steady_output_dir}")
 
 if __name__ == "__main__":
     main()
