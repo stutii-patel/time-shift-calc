@@ -23,19 +23,35 @@ def calculate_adaptive_weight_v2(n_consumers):
     return min(n_consumers ** 2, 10000)
 
 
-def calculate_adaptive_weight_v3(n_consumers):
+def calculate_adaptive_weight_v3(n_consumers, max_n_in_network=500):
     """
-    Tiered weighting: different scaling for different size ranges
-    Gives extra boost to medium-sized edges (50-200 consumers)
+    Tiered weighting based on relative size in the network.
+    Gives extra boost to smaller/medium edges relative to the network max.
     """
-    if n_consumers <= 50:
-        return n_consumers ** 2 * 2.0  # 2x boost for small edges
-    elif n_consumers <= 200:
-        return n_consumers ** 2 * 1.5  # 1.5x boost for medium edges
-    elif n_consumers <= 500:
-        return n_consumers ** 2 * 1.0  # Normal weight
+    # Calculate relative position in network (0.0 to 1.0)
+    if max_n_in_network <= 1:
+        relative_size = 0.5
     else:
-        return n_consumers ** 2 * 0.5  # Reduce for very large edges
+        relative_size = n_consumers / max_n_in_network
+    
+    # Base weight (quadratic)
+    base_weight = n_consumers ** 2
+    
+    # Apply multiplier based on relative size
+    if relative_size <= 0.20:
+        # Small edges (bottom 20%)
+        multiplier = 2.0
+    elif relative_size <= 0.50:
+        # Medium edges (20-50%)
+        multiplier = 1.5
+    elif relative_size <= 0.80:
+        # Large edges (50-80%)
+        multiplier = 1.0
+    else:
+        # Huge edges (top 20%)
+        multiplier = 0.5
+    
+    return base_weight * multiplier
 
 
 def calculate_adaptive_weight_v4(n_consumers):
@@ -71,7 +87,16 @@ def optimize_steady_state_with_improved_weighting(
         'v4': calculate_adaptive_weight_v4,
     }
     
-    calc_weight = weight_functions.get(weight_scheme, calculate_adaptive_weight_v3)
+    
+    # Calculate max consumers in network for relative weighting
+    max_n_in_network = 1
+    if relevant_edges:
+        max_n_in_network = max([e.n_consumers for e in relevant_edges])
+    
+    if weight_scheme == 'v3':
+        calc_weight = lambda n: calculate_adaptive_weight_v3(n, max_n_in_network)
+    else:
+        calc_weight = weight_functions.get(weight_scheme, calculate_adaptive_weight_v3)
     
     # Initialize all consumers to r=1
     for c in network.consumers:
@@ -90,12 +115,17 @@ def optimize_steady_state_with_improved_weighting(
     
     print(f"Initial weighted error (using {weight_scheme}): {initial_error:.6f}")
     
-    # Calculate average target for regularization
-    target_sims = [e.get_target_simultaneity() for e in relevant_edges if e.n_consumers > 1]
-    avg_target_sim = sum(target_sims) / len(target_sims) if target_sims else 0.7
-    print(f"Average target simultaneity: {avg_target_sim:.4f}")
+    # Regularization target: push partial load ratios toward 1.0 (neutral/default state)
+    reg_target = 1.0
+    print(f"Regularization target: {reg_target:.4f}")
     
-    best_obj = initial_error
+    # Calculate initial regularization error to include in best_obj
+    initial_reg_error = sum(
+        lambda_reg * (c.partial_load_ratio - reg_target)**2 
+        for c in network.consumers
+    )
+    
+    best_obj = initial_error + initial_reg_error  # Include both terms
     best_ratios = [c.partial_load_ratio for c in network.consumers]
     no_improvement_count = 0
     
@@ -128,10 +158,10 @@ def optimize_steady_state_with_improved_weighting(
             for c in edge.downstream_consumers:
                 gradients[c.id] += factor * c.peak_load
         
-        # 2. Add regularization
+        # 2. Add regularization (push toward reg_target=1.0)
         reg_error = 0
         for c in network.consumers:
-            deviation = c.partial_load_ratio - avg_target_sim
+            deviation = c.partial_load_ratio - reg_target
             regularization = 2 * lambda_reg * deviation
             gradients[c.id] += regularization
             reg_error += lambda_reg * deviation**2
@@ -184,7 +214,7 @@ def optimize_steady_state_with_improved_weighting(
         c.partial_load_ratio = best_ratios[i]
     
     print(f"Final Error: {best_obj:.6f}")
-    return total_obj
+    return best_obj  # Return the best objective found, not the last one
 
 
 # ============================================================================
