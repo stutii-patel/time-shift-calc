@@ -26,7 +26,8 @@ def calculate_adaptive_weight_v2(n_consumers):
 def calculate_adaptive_weight_v3(n_consumers, max_n_in_network=500):
     """
     Tiered weighting based on relative size in the network.
-    Gives extra boost to smaller/medium edges relative to the network max.
+    - For LARGE networks (max >= 100): boost small/medium edges, reduce huge
+    - For SMALL networks (max < 100): boost largest edges (they ARE the backbone)
     """
     # Calculate relative position in network (0.0 to 1.0)
     if max_n_in_network <= 1:
@@ -37,19 +38,28 @@ def calculate_adaptive_weight_v3(n_consumers, max_n_in_network=500):
     # Base weight (quadratic)
     base_weight = n_consumers ** 2
     
-    # Apply multiplier based on relative size
-    if relative_size <= 0.20:
-        # Small edges (bottom 20%)
-        multiplier = 2.0
-    elif relative_size <= 0.50:
-        # Medium edges (20-50%)
-        multiplier = 1.5
-    elif relative_size <= 0.80:
-        # Large edges (50-80%)
-        multiplier = 1.0
+    # For SMALL networks, BOOST the largest edges (they are the backbone)
+    if max_n_in_network < 100:
+        if relative_size >= 0.80:      # Largest edges (top 20%)
+            multiplier = 2.0            # BOOST - these are the backbone
+        elif relative_size >= 0.50:
+            multiplier = 1.5
+        else:
+            multiplier = 1.0
     else:
-        # Huge edges (top 20%)
-        multiplier = 0.5
+        # For LARGE networks, reduce huge edges to balance optimization
+        if relative_size <= 0.20:
+            # Small edges (bottom 20%)
+            multiplier = 2.0
+        elif relative_size <= 0.50:
+            # Medium edges (20-50%)
+            multiplier = 1.5
+        elif relative_size <= 0.80:
+            # Large edges (50-80%)
+            multiplier = 1.0
+        else:
+            # Huge edges (top 20%)
+            multiplier = 0.5
     
     return base_weight * multiplier
 
@@ -188,7 +198,7 @@ def optimize_steady_state_with_improved_weighting(
         for c in network.consumers:
             old_r = c.partial_load_ratio
             new_r = old_r - adaptive_lr * gradients[c.id]
-            new_r = max(0.05, min(1.0, new_r))  # Constrain to [0.05, 1.0]
+            new_r = max(0.01, min(1.0, new_r))  # Constrain to [0.01, 1.0]
             c.partial_load_ratio = new_r
             max_change = max(max_change, abs(new_r - old_r))
         
@@ -502,9 +512,9 @@ def main():
     # We use a slightly lower learning rate for stability with these new weights
     final_error = optimize_steady_state_with_improved_weighting(
         net, relevant_edges, 
-        iterations=2000, 
-        learning_rate=0.005, 
-        lambda_reg=0.05,
+        iterations=5000, 
+        learning_rate=0.02, 
+        lambda_reg=0.001,
         weight_scheme=weight_scheme
     )
     
