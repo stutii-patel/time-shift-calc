@@ -663,6 +663,6 @@ Saved.
 Generating steady-state verification plot: output/weight_comparison/test3/w_n2/steady_state/verification_test3.png
 Saved verification plot.
 
-Elapsed time: 12.20s
+Elapsed time: 10.71s
 Dynamic results saved to: output/weight_comparison/test3/w_n2/dynamic
 Steady-state results saved to: output/weight_comparison/test3/w_n2/steady_state

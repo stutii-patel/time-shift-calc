@@ -123,6 +123,6 @@ Saved.
 Generating steady-state verification plot: output/weight_comparison/NetzHast/w_n2/steady_state/verification_NetzHast.png
 Saved verification plot.
 
-Elapsed time: 2.46s
+Elapsed time: 2.74s
 Dynamic results saved to: output/weight_comparison/NetzHast/w_n2/dynamic
 Steady-state results saved to: output/weight_comparison/NetzHast/w_n2/steady_state

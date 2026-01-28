@@ -1,0 +1,134 @@
+{
+  "NetzHast": {
+    "w_1": {
+      "initial_error": 0.143167,
+      "final_error": 0.032564,
+      "avg_target_sim": 0.9684,
+      "main_edges_count": 9,
+      "mean_deviation": 0.02298888888888889,
+      "max_deviation": 0.0962,
+      "largest_edge": {
+        "n_e": 39,
+        "target": 0.8016,
+        "achieved": 0.8978,
+        "deviation": 0.0962
+      }
+    },
+    "w_n": {
+      "initial_error": 4.180179,
+      "final_error": 0.411071,
+      "avg_target_sim": 0.9684,
+      "main_edges_count": 9,
+      "mean_deviation": 0.02252222222222222,
+      "max_deviation": 0.0598,
+      "largest_edge": {
+        "n_e": 39,
+        "target": 0.8016,
+        "achieved": 0.8614,
+        "deviation": 0.0598
+      }
+    },
+    "w_n2": {
+      "initial_error": 130.361008,
+      "final_error": 6.70393,
+      "avg_target_sim": 0.9684,
+      "main_edges_count": 9,
+      "mean_deviation": 0.02071111111111111,
+      "max_deviation": 0.0331,
+      "largest_edge": {
+        "n_e": 39,
+        "target": 0.8016,
+        "achieved": 0.8277,
+        "deviation": 0.0261
+      }
+    }
+  },
+  "demoVerbundnetz_SimulationNeu": {
+    "w_1": {
+      "initial_error": 45.670175,
+      "final_error": 4.913112,
+      "avg_target_sim": 0.8569,
+      "main_edges_count": 463,
+      "mean_deviation": 0.06741792656587474,
+      "max_deviation": 0.2662,
+      "largest_edge": {
+        "n_e": 692,
+        "target": 0.4759,
+        "achieved": 0.6509,
+        "deviation": 0.175
+      }
+    },
+    "w_n": {
+      "initial_error": 15800.502231,
+      "final_error": 197.492088,
+      "avg_target_sim": 0.8569,
+      "main_edges_count": 463,
+      "mean_deviation": 0.06639935205183585,
+      "max_deviation": 0.3808,
+      "largest_edge": {
+        "n_e": 692,
+        "target": 0.4759,
+        "achieved": 0.5254,
+        "deviation": 0.0495
+      }
+    },
+    "w_n2": {
+      "initial_error": 7660035.154421,
+      "final_error": 5827.668344,
+      "avg_target_sim": 0.8569,
+      "main_edges_count": 463,
+      "mean_deviation": 0.07186911447084232,
+      "max_deviation": 0.5416,
+      "largest_edge": {
+        "n_e": 692,
+        "target": 0.4759,
+        "achieved": 0.4777,
+        "deviation": 0.0019
+      }
+    }
+  },
+  "test3": {
+    "w_1": {
+      "initial_error": 18.521724,
+      "final_error": 0.991421,
+      "avg_target_sim": 0.839,
+      "main_edges_count": 208,
+      "mean_deviation": 0.04101442307692308,
+      "max_deviation": 0.0762,
+      "largest_edge": {
+        "n_e": 85,
+        "target": 0.62,
+        "achieved": 0.6962,
+        "deviation": 0.0762
+      }
+    },
+    "w_n": {
+      "initial_error": 1299.003675,
+      "final_error": 11.136835,
+      "avg_target_sim": 0.839,
+      "main_edges_count": 208,
+      "mean_deviation": 0.017463942307692305,
+      "max_deviation": 0.0558,
+      "largest_edge": {
+        "n_e": 85,
+        "target": 0.62,
+        "achieved": 0.646,
+        "deviation": 0.026
+      }
+    },
+    "w_n2": {
+      "initial_error": 95896.69669,
+      "final_error": 108.788671,
+      "avg_target_sim": 0.839,
+      "main_edges_count": 208,
+      "mean_deviation": 0.008301923076923078,
+      "max_deviation": 0.0347,
+      "largest_edge": {
+        "n_e": 85,
+        "target": 0.62,
+        "achieved": 0.6163,
+        "deviation": -0.0037
+      }
+    }
+  }
+}

@@ -1631,6 +1631,6 @@ Saved.
 Generating steady-state verification plot: output/weight_comparison/demoVerbundnetz_SimulationNeu/w_n2/steady_state/verification_demoVerbundnetz_SimulationNeu.png
 Saved verification plot.
 
-Elapsed time: 55.84s
+Elapsed time: 58.64s
 Dynamic results saved to: output/weight_comparison/demoVerbundnetz_SimulationNeu/w_n2/dynamic
 Steady-state results saved to: output/weight_comparison/demoVerbundnetz_SimulationNeu/w_n2/steady_state
