@@ -32,7 +32,7 @@ Configuration parameters that control the optimizer's behavior. Stored as `m_con
 | `m_maxIterations` | `int` | `5` | Maximum coordinate-descent iterations per optimization phase before forced stop. |
 | `m_maxShiftHours` | `double` | `3.0` | Maximum allowed time shift in either direction (±hours). Shifts are clamped to this range. |
 | `m_roundShiftToHours` | `double` | `0.25` | Granularity for rounding shifts (e.g., `0.25` = 15-minute increments). Set to `0` to disable rounding. |
-| `m_useSinglePhase` | `bool` | `true` | If `true`, uses a single merged phase with 12 deltas (faster). If `false`, uses 3 separate phases (coarse → medium → fine). |
+| `m_useSinglePhase` | `bool` | `false` | If `true`, uses a single merged phase with 12 deltas. If `false` (recommended), uses 3 separate phases (coarse → medium → fine) which produces lower error. |
 
 ---
 
@@ -104,16 +104,42 @@ double optimize(IBK::Notification* notifier = nullptr);
 
 **Why multi-start?** The optimization landscape is non-convex (many local minima). Multiple random starting points increase the chance of finding a good global solution. Explained in detail in the next section.
 
-**Why a single merged phase?** Combining coarse, medium, and fine deltas in one phase lets every consumer access all 12 deltas in every iteration, converging faster than running 3 separate phases sequentially. Explained in detail below.
+**Why three phases?** Coarse phases quickly explore the search space; fine phases polish the solution. This avoids getting stuck in coarse local minima while still being computationally efficient. Explained in detail below.
 
 #### Why Multi-Start Hill Climbing?
 
+The diagram below shows the **error landscape** — imagine plotting the total squared error (Y-axis) for every possible shift configuration (X-axis). The optimizer tries to find the lowest point:
+
+```
+  Error
+  ▲
+  │
+  │   ╭╮                          ╭╮
+  │  ╭╯╰╮        ╭╮              ╭╯╰╮
+  │ ╭╯  ╰╮      ╭╯╰╮            ╭╯  ╰╮
+  │╭╯    ╰╮    ╭╯  ╰╮    ╭╮    ╭╯    ╰╮
+  ││      ╰╮  ╭╯    ╰╮  ╭╯╰╮  ╭╯      │
+  ││       ╰╮╭╯      ╰╮╭╯  ╰╮╭╯       │
+  ││        ╰╯        ╰╯    ╰╯        │
+  ││     Local Min   GLOBAL   Local    │
+  ││    (error=0.04)  MIN    (error=   │
+  ││                (0.02)    0.05)    │
+  │╰───────────────────────────────────╯
+  └─────────────────────────────────────▶ Shift Configuration
+       ↓              ↓           ↓
+    Restart 1      Restart 2   Restart 3
+    lands here     lands here  lands here
+    (stuck!)       (best! ✓)   (stuck!)
+```
+
+**The key problem:** A hill-climber can only move **downhill** (follow the slope). Once it reaches a valley floor, it stops — even if a deeper valley exists elsewhere. It cannot climb over the hill between valleys.
+
 To understand this, we first need to understand the concept of **local and global minima** in this specific problem.
 
-**What is a minimum?** The optimizer minimizes the total squared error — the gap between actual and target simultaneity across all edges. A **minimum** is a shift configuration where no small change to any single consumer's shift reduces the error further. Think of it as a valley in a landscape: you can't go any lower by taking small steps.
+**What is a minimum?** The optimizer minimizes the total squared error — the gap between actual and target simultaneity across all edges. A **minimum** is a shift configuration where no small change to any single consumer's shift reduces the error further. Think of it as a valley in the landscape above: you can't go any lower by taking small steps.
 
-**Global minimum** = the absolute best solution (the deepest valley).
-**Local minimum** = a solution that *looks* best from where you stand, but a better one exists elsewhere (a shallower valley — you'd have to climb uphill to reach the deeper one).
+**Global minimum** = the absolute best solution (the deepest valley in the diagram — error 0.02).
+**Local minimum** = a solution that *looks* best from where you stand, but a better one exists elsewhere (the shallower valleys — error 0.04 or 0.05).
 
 **Why do multiple minima exist in this problem?** Consider a simple example with 3 consumers (A, B, C) sharing one pipe:
 
