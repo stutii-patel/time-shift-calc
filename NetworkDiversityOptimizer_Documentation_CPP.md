@@ -6,6 +6,7 @@ The `NetworkDiversityOptimizer` adjusts the **time shifts** of individual buildi
 
 ```mermaid
 flowchart TD
+    UI["🖱 Optimize Button Clicked<br>(SVPropNetworkStaticAnalysis)"] --> A
     A["Constructor<br>(Network &amp;)"] --> B["initializeOptimizationGraph()"]
     B --> C["optimize()"]
     C --> D["precomputeProfiles()"]
@@ -16,6 +17,8 @@ flowchart TD
     H --> I["Track best solution"]
     I -->|next restart| E
     I --> J["recalculateFinalProfiles()"]
+
+    style UI fill:#E3F2FD,stroke:#1565C0,stroke-width:2px
 ```
 
 ---
@@ -101,6 +104,50 @@ double optimize(IBK::Notification* notifier = nullptr);
    - The best-performing shift configuration (lowest total squared error) is saved globally.
 4. **Restores the best solution** found across all restarts.
 5. **Calls `recalculateFinalProfiles()`** so that edge aggregate profiles reflect the optimal shifts.
+
+```mermaid
+flowchart TD
+    A["optimize() called"] --> B["Set simultaneity spline"]
+    B --> C["precomputeProfiles()"]
+    C --> D{"restart = 0"}
+
+    subgraph PARALLEL_RESTARTS ["♻ Restart Loop — PARALLELIZABLE"]
+        direction TB
+        D --> E{"restart == 0?"}
+        E -->|Yes| F["Initialize all shifts = 0.0"]
+        E -->|No| G["randomizeShifts()"]
+        F --> H["Calculate initial error"]
+        G --> H
+
+        subgraph PHASES ["Three Sequential Phases"]
+            direction TB
+            H --> P1["Phase 1: Coarse<br/>deltas: ±2.25, ±1.5, ±1.0"]
+            P1 --> P2["Phase 2: Medium<br/>deltas: ±0.75, ±0.5"]
+            P2 --> P3["Phase 3: Fine<br/>deltas: ±0.25"]
+        end
+
+        P3 --> K["Calculate final error"]
+        K --> L{"error < bestGlobalError?"}
+        L -->|Yes| M["Save shifts as best solution"]
+        L -->|No| N["Discard this restart"]
+        M --> O{"More restarts?"}
+        N --> O
+        O -->|Yes| D
+    end
+
+    O -->|No| Q["Restore best global shifts"]
+    Q --> R["recalculateFinalProfiles()"]
+    R --> S["Return best error"]
+
+    style PARALLEL_RESTARTS stroke:#2196F3,stroke-width:2px,stroke-dasharray: 5 5
+    style PHASES stroke:#FF9800,stroke-width:2px
+```
+
+> [!TIP]
+> **Parallelization opportunities:**
+> - **Restarts** (blue dashed box): Each restart is fully independent — different random starting shifts, no shared state during optimization. These can run on separate threads with a final reduction to pick the best result.
+> - **Consumer evaluations** within `runCoordinateDescentPhase`: Each consumer's shift evaluation reads shared edge data but only writes to its own shift. With careful synchronization, consumers on non-overlapping edges can be evaluated in parallel.
+> - **Edge error computation**: Within `calculateLocalError`, the error for each edge can be computed independently and summed.
 
 **Why multi-start?** The optimization landscape is non-convex (many local minima). Multiple random starting points increase the chance of finding a good global solution. Explained in detail in the next section.
 
